@@ -7,7 +7,14 @@
  *   The rendered HTML for the debug page.
  */
 function crumbs_debug_page() {
-  drupal_set_title('Crumbs debug');
+  // @FIXME
+// drupal_set_title() has been removed. There are now a few ways to set the title
+// dynamically, depending on the situation.
+// 
+// 
+// @see https://www.drupal.org/node/2067859
+// drupal_set_title('Crumbs debug');
+
 
   $path_to_test = '';
   if (isset($_GET['path_to_test'])) {
@@ -27,8 +34,11 @@ function crumbs_debug_page() {
     }
   }
 
-  $path_checked = check_plain($path_to_test);
-  $form_action = url('admin/structure/crumbs/debug');
+  $path_checked = \Drupal\Component\Utility\SafeMarkup::checkPlain($path_to_test);
+  // @FIXME
+// url() expects a route name or an external URI.
+// $form_action = url('admin/structure/crumbs/debug');
+
 
   $input_html = <<<EOT
 <input id="crumbs-admin-debug-path" type="text" class="form-text" size="40" name="path_to_test" value="$path_checked" />
@@ -36,10 +46,13 @@ function crumbs_debug_page() {
 EOT;
   $input_html = t('Breadcrumb for: !text_field', array('!text_field' => $input_html));
 
-  $placeholders = array(
-    '!plugin_weights' => l(t('Plugin weights'), 'admin/structure/crumbs'),
-    '!display_settings' => l(t('Display settings'), 'admin/structure/crumbs/display'),
-  );
+  // @FIXME
+// l() expects a Url object, created from a route name or external URI.
+// $placeholders = array(
+//     '!plugin_weights' => l(t('Plugin weights'), 'admin/structure/crumbs'),
+//     '!display_settings' => l(t('Display settings'), 'admin/structure/crumbs/display'),
+//   );
+
 
   $paragraphs = array();
   $paragraphs[] = <<<EOT
@@ -79,8 +92,14 @@ EOT;
     foreach (array_reverse($_SESSION['crumbs.admin.debug.history']) as $path => $true) {
       if ('admin/structure/crumbs/debug' !== substr($path, 0, 28)) {
         // We can't use l() directly, since this would add an "active" class.
-        $url = url('admin/structure/crumbs/debug', array('query' => array('path_to_test' => $path)));
-        $link = l($path, $url, array('external' => TRUE));
+        // @FIXME
+// url() expects a route name or an external URI.
+// $url = url('admin/structure/crumbs/debug', array('query' => array('path_to_test' => $path)));
+
+        // @FIXME
+// l() expects a Url object, created from a route name or external URI.
+// $link = l($path, $url, array('external' => TRUE));
+
         $recently_visited .= '<li>' . $link . '</li>';
       }
     }
@@ -137,7 +156,14 @@ function _crumbs_admin_debug_matrix($path_to_test) {
 }
 
 function _crumbs_debug_devel_page() {
-  drupal_set_title('Crumbs debug - devel');
+  // @FIXME
+// drupal_set_title() has been removed. There are now a few ways to set the title
+// dynamically, depending on the situation.
+// 
+// 
+// @see https://www.drupal.org/node/2067859
+// drupal_set_title('Crumbs debug - devel');
+
 
   $path_to_test = '';
   if (isset($_GET['path_to_test'])) {
@@ -157,8 +183,11 @@ function _crumbs_debug_devel_page() {
     }
   }
 
-  $path_checked = check_plain($path_to_test);
-  $form_action = url('admin/structure/crumbs/debug/devel');
+  $path_checked = \Drupal\Component\Utility\SafeMarkup::checkPlain($path_to_test);
+  // @FIXME
+// url() expects a route name or an external URI.
+// $form_action = url('admin/structure/crumbs/debug/devel');
+
 
   $input_html = <<<EOT
 <input id="crumbs-admin-debug-path" type="text" class="form-text" size="40" name="path_to_test" value="$path_checked" />
@@ -166,10 +195,13 @@ function _crumbs_debug_devel_page() {
 EOT;
   $input_html = t('Internal data for: !text_field', array('!text_field' => $input_html));
 
-  $placeholders = array(
-    '!plugin_weights' => l(t('Plugin weights'), 'admin/structure/crumbs'),
-    '!display_settings' => l(t('Display settings'), 'admin/structure/crumbs/display'),
-  );
+  // @FIXME
+// l() expects a Url object, created from a route name or external URI.
+// $placeholders = array(
+//     '!plugin_weights' => l(t('Plugin weights'), 'admin/structure/crumbs'),
+//     '!display_settings' => l(t('Display settings'), 'admin/structure/crumbs/display'),
+//   );
+
 
   $paragraphs = array();
   $paragraphs[] = <<<EOT
@@ -207,8 +239,14 @@ EOT;
     foreach (array_reverse($_SESSION['crumbs.admin.debug.history']) as $path => $true) {
       if ('admin/structure/crumbs/debug' !== substr($path, 0, 28)) {
         // We can't use l() directly, since this would add an "active" class.
-        $url = url('admin/structure/crumbs/debug/devel', array('query' => array('path_to_test' => $path)));
-        $link = l($path, $url, array('external' => TRUE));
+        // @FIXME
+// url() expects a route name or an external URI.
+// $url = url('admin/structure/crumbs/debug/devel', array('query' => array('path_to_test' => $path)));
+
+        // @FIXME
+// l() expects a Url object, created from a route name or external URI.
+// $link = l($path, $url, array('external' => TRUE));
+
         $recently_visited .= '<li>' . $link . '</li>';
       }
     }

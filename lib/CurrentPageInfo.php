@@ -119,7 +119,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
     if ($this->breadcrumbSuppressed) {
       return array();
     }
-    if (user_access('administer crumbs')) {
+    if (\Drupal::currentUser()->hasPermission('administer crumbs')) {
       // Remember which pages we are visiting,
       // for the autocomplete on admin/structure/crumbs/debug.
       unset($_SESSION['crumbs.admin.debug.history'][$this->path]);
@@ -158,7 +158,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$showCurrentPage
    */
   protected function showCurrentPage() {
-    return variable_get('crumbs_show_current_page', FALSE) & ~CRUMBS_TRAILING_SEPARATOR;
+    return \Drupal::config('crumbs.settings')->get('crumbs_show_current_page') & ~CRUMBS_TRAILING_SEPARATOR;
   }
 
   /**
@@ -167,7 +167,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$trailingSeparator
    */
   protected function trailingSeparator() {
-    return variable_get('crumbs_show_current_page', FALSE) & CRUMBS_TRAILING_SEPARATOR;
+    return \Drupal::config('crumbs.settings')->get('crumbs_show_current_page') & CRUMBS_TRAILING_SEPARATOR;
   }
 
   /**
@@ -178,7 +178,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$showFrontPage
    */
   protected function showFrontPage() {
-    return variable_get('crumbs_show_front_page', TRUE);
+    return \Drupal::config('crumbs.settings')->get('crumbs_show_front_page');
   }
 
   /**
@@ -189,7 +189,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$minTrailItems
    */
   protected function minTrailItems() {
-    return variable_get('crumbs_minimum_trail_items', 2);
+    return \Drupal::config('crumbs.settings')->get('crumbs_minimum_trail_items');
   }
 
   /**
@@ -200,7 +200,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$separator
    */
   protected function separator() {
-    return filter_xss_admin(variable_get('crumbs_separator', ' &raquo; '));
+    return \Drupal\Component\Utility\Xss::filterAdmin(\Drupal::config('crumbs.settings')->get('crumbs_separator'));
   }
 
   /**
@@ -211,7 +211,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$separatorSpan
    */
   protected function separatorSpan() {
-    return (bool)variable_get('crumbs_separator_span', FALSE);
+    return (bool)\Drupal::config('crumbs.settings')->get('crumbs_separator_span');
   }
 
   /**
@@ -251,7 +251,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
     $router_item = $this->router->getRouterItem($this->path);
     // Allow modules to alter the breadcrumb, if possible, as that is much
     // faster than rebuilding an entirely new active trail.
-    drupal_alter('menu_breadcrumb', $breadcrumb_items, $router_item);
+    \Drupal::moduleHandler()->alter('menu_breadcrumb', $breadcrumb_items, $router_item);
     return $breadcrumb_items;
   }
 
@@ -271,26 +271,62 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
     if ($this->showCurrentPage) {
       $last = array_pop($breadcrumb_items);
       foreach ($breadcrumb_items as $i => $item) {
-        $links[$i] = theme('crumbs_breadcrumb_link', $item);
+        // @FIXME
+// theme() has been renamed to _theme() and should NEVER be called directly.
+// Calling _theme() directly can alter the expected output and potentially
+// introduce security issues (see https://www.drupal.org/node/2195739). You
+// should use renderable arrays instead.
+// 
+// 
+// @see https://www.drupal.org/node/2195739
+// $links[$i] = theme('crumbs_breadcrumb_link', $item);
+
       }
-      $links[] = theme('crumbs_breadcrumb_current_page', array(
-        'item' => $last,
-        'show_current_page' => $this->showCurrentPage,
-      ));
+      // @FIXME
+// theme() has been renamed to _theme() and should NEVER be called directly.
+// Calling _theme() directly can alter the expected output and potentially
+// introduce security issues (see https://www.drupal.org/node/2195739). You
+// should use renderable arrays instead.
+// 
+// 
+// @see https://www.drupal.org/node/2195739
+// $links[] = theme('crumbs_breadcrumb_current_page', array(
+//         'item' => $last,
+//         'show_current_page' => $this->showCurrentPage,
+//       ));
+
     }
     else {
       foreach ($breadcrumb_items as $i => $item) {
-        $links[$i] = theme('crumbs_breadcrumb_link', $item);
+        // @FIXME
+// theme() has been renamed to _theme() and should NEVER be called directly.
+// Calling _theme() directly can alter the expected output and potentially
+// introduce security issues (see https://www.drupal.org/node/2195739). You
+// should use renderable arrays instead.
+// 
+// 
+// @see https://www.drupal.org/node/2195739
+// $links[$i] = theme('crumbs_breadcrumb_link', $item);
+
       }
     }
-    return theme('breadcrumb', array(
-      'breadcrumb' => $links,
-      'crumbs_breadcrumb_items' => $breadcrumb_items,
-      'crumbs_trail' => $this->trail,
-      'crumbs_separator' => $this->separator,
-      'crumbs_separator_span' => $this->separatorSpan,
-      'crumbs_trailing_separator' => $this->trailingSeparator,
-    ));
+    // @FIXME
+// theme() has been renamed to _theme() and should NEVER be called directly.
+// Calling _theme() directly can alter the expected output and potentially
+// introduce security issues (see https://www.drupal.org/node/2195739). You
+// should use renderable arrays instead.
+// 
+// 
+// @see https://www.drupal.org/node/2195739
+// return theme('breadcrumb', array(
+//       'breadcrumb' => $links,
+//       'crumbs_breadcrumb_items' => $breadcrumb_items,
+//       'crumbs_trail' => $this->trail,
+//       'crumbs_separator' => $this->separator,
+//       'crumbs_separator_span' => $this->separatorSpan,
+//       'crumbs_trailing_separator' => $this->trailingSeparator,
+//     ));
+
   }
 
   /**

@@ -7,18 +7,18 @@
  * @param crumbs_InjectedAPI_hookCrumbsPlugins $api
  */
 function crumbs_crumbs_plugins($api) {
-  if (module_exists('node')) {
+  if (\Drupal::moduleHandler()->moduleExists('node')) {
     $api->entityRoute('node', 'node/%', 'type', 'Node type');
   }
-  if (module_exists('user')) {
+  if (\Drupal::moduleHandler()->moduleExists('user')) {
     $api->entityRoute('user', 'user/%', NULL, 'User role');
   }
-  if (module_exists('taxonomy')) {
+  if (\Drupal::moduleHandler()->moduleExists('taxonomy')) {
     $api->entityRoute('taxonomy_term', 'taxonomy/term/%', 'vocabulary_machine_name', 'Vocabulary');
   }
 
   $api->monoPlugin('home_title');
-  $suffix = module_exists('token') ? 'TokenEnabled' : 'TokenDisabled';
+  $suffix = \Drupal::moduleHandler()->moduleExists('token') ? 'TokenEnabled' : 'TokenDisabled';
   $api->entityParentPlugin('entityParent', $suffix);
 }
 
@@ -29,7 +29,7 @@ class crumbs_CrumbsMonoPlugin_home_title implements crumbs_MonoPlugin_FindTitleI
    * {@inheritdoc}
    */
   function describe($api) {
-    $home_title = variable_get('crumbs_home_link_title', 'Home');
+    $home_title = \Drupal::config('crumbs.settings')->get('crumbs_home_link_title');
     return t('Set t("@title") as the title for the root item.', array(
       '@title' => $home_title,
     ));
@@ -40,7 +40,7 @@ class crumbs_CrumbsMonoPlugin_home_title implements crumbs_MonoPlugin_FindTitleI
    */
   function findTitle($path, $item) {
     if ('<front>' === $item['href']) {
-      $home_title = variable_get('crumbs_home_link_title', 'Home');
+      $home_title = \Drupal::config('crumbs.settings')->get('crumbs_home_link_title');
       return t($home_title);
     }
 

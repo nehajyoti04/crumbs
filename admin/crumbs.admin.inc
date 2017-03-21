@@ -59,12 +59,12 @@ function crumbs_admin_display_form() {
   $form['home_link_settings']['crumbs_show_front_page'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show the home page link (recommended).'),
-    '#default_value' => variable_get('crumbs_show_front_page', TRUE),
+    '#default_value' => \Drupal::config('crumbs.settings')->get('crumbs_show_front_page'),
   );
   $form['home_link_settings']['crumbs_home_link_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Home link title'),
-    '#default_value' => variable_get('crumbs_home_link_title', 'Home'),
+    '#default_value' => \Drupal::config('crumbs.settings')->get('crumbs_home_link_title'),
     '#description' => t('Title of the link that points to the front page.'),
     '#size' => 30,
   );
@@ -87,7 +87,7 @@ function crumbs_admin_display_form() {
       )),
       CRUMBS_SHOW_CURRENT_PAGE_LINK => t('Show, as a link.'),
     ),
-    '#default_value' => variable_get('crumbs_show_current_page', FALSE),
+    '#default_value' => \Drupal::config('crumbs.settings')->get('crumbs_show_current_page'),
   );
 
   // Visibility settings
@@ -102,7 +102,7 @@ function crumbs_admin_display_form() {
     '#type' => 'radios',
     '#title' => t('Shortest visible breadcrumb'),
     '#description' => t('If the trail has fewer items than specified here, the breadcrumb will be hidden.'),
-    '#default_value' => variable_get('crumbs_minimum_trail_items', 2),
+    '#default_value' => \Drupal::config('crumbs.settings')->get('crumbs_minimum_trail_items'),
     '#options' => array(
       1 => "($home)",
       2 => "(<a href='#'>$home</a>) &raquo; ($current)",
@@ -120,7 +120,7 @@ function crumbs_admin_display_form() {
     '#title' => t('Wrap the separator in !tags tags:', array(
         '!tags' => '<code>&lt;span class="crumbs-separator"&gt;</code>',
       )),
-    '#default_value' => (bool)variable_get('crumbs_separator_span', FALSE),
+    '#default_value' => (bool)\Drupal::config('crumbs.settings')->get('crumbs_separator_span'),
   );
   $separator_notes = '';
   foreach (array(
@@ -137,7 +137,7 @@ function crumbs_admin_display_form() {
     '#type' => 'textfield',
     '#title' => t('Custom separator HTML'),
     '#description' => $separator_desc,
-    '#default_value' => variable_get('crumbs_separator', ' &raquo; '),
+    '#default_value' => \Drupal::config('crumbs.settings')->get('crumbs_separator'),
     '#element_validate' => array('_crumbs_validate_separator_xss'),
   );
   $form['separator_settings']['notes'] = array(
@@ -148,14 +148,21 @@ function crumbs_admin_display_form() {
   // Theme override settings
   $theme_override_options = array('theme_breadcrumb' => array());
   $themes_need_flush = FALSE;
-  $originals = variable_get('crumbs_original_theme_breadcrumb', array());
+  // @FIXME
+// Could not extract the default value because it is either indeterminate, or
+// not scalar. You'll need to provide a default value in
+// config/install/crumbs.settings.yml and config/schema/crumbs.schema.yml.
+$originals = \Drupal::config('crumbs.settings')->get('crumbs_original_theme_breadcrumb');
   foreach (list_themes() as $theme_name => $theme_obj) {
     if ('1' !== '' . $theme_obj->status) {
       // Theme is disabled.
       continue;
     }
     $path = 'admin/appearance/settings/' . $theme_name;
-    $link = l($theme_obj->info['name'], $path);
+    // @FIXME
+// l() expects a Url object, created from a route name or external URI.
+// $link = l($theme_obj->info['name'], $path);
+
     if (!isset($originals[$theme_name])) {
       $f = 'theme_breadcrumb';
       $link .= '?';
@@ -183,11 +190,15 @@ function crumbs_admin_display_form() {
   }
 
   if (!empty($theme_override_options)) {
-    $form['theme_override_settings']['crumbs_override_theme_breadcrumb'] = array(
+    // @FIXME
+// Could not extract the default value because it is either indeterminate, or
+// not scalar. You'll need to provide a default value in
+// config/install/crumbs.settings.yml and config/schema/crumbs.schema.yml.
+$form['theme_override_settings']['crumbs_override_theme_breadcrumb'] = array(
       '#type' => 'checkboxes',
       '#options' => $theme_override_options,
       '#html' => TRUE,
-      '#default_value' => variable_get('crumbs_override_theme_breadcrumb', array('theme_breadcrumb')),
+      '#default_value' => \Drupal::config('crumbs.settings')->get('crumbs_override_theme_breadcrumb'),
       '#title' => t('Override theme implementations'),
     );
     $form['theme_override_settings']['notes'] = array(
@@ -219,11 +230,11 @@ function crumbs_admin_display_form() {
  */
 function _crumbs_validate_separator_xss($element, $form_state) {
   $string = $element['#value'];
-  $filtered = filter_xss_admin($string);
+  $filtered = \Drupal\Component\Utility\Xss::filterAdmin($string);
   if ($string !== $filtered) {
     form_error($element, t('%name contains unsafe HTML. Maybe you meant %safe instead.', array(
       '%name' => $element['#title'],
-      '!safe' => '"<code>' . check_plain($filtered) . '</code>"',
+      '!safe' => '"<code>' . \Drupal\Component\Utility\SafeMarkup::checkPlain($filtered) . '</code>"',
     )));
   }
 }

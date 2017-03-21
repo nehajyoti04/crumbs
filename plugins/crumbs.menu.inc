@@ -45,13 +45,13 @@ class menu_CrumbsMultiPlugin_hierarchy implements crumbs_MultiPlugin_FindParentI
     $q->addExpression('child.plid', 'plid');
     $q->condition('child.link_path', $path);
 
-    if (module_exists('i18n_menu')) {
+    if (\Drupal::moduleHandler()->moduleExists('i18n_menu')) {
       // Filter and sort by language.
       // The 'language' column only exists if i18n_menu is installed.
       // (See i18n_menu_install())
-      $language = LANGUAGE_NONE;
-      if (isset($GLOBALS['language'])) {
-        $language = array($language, $GLOBALS['language']->language);
+      $language = \Drupal\Core\Language\Language::LANGCODE_NOT_SPECIFIED;
+      if (isset(\Drupal::languageManager()->getCurrentLanguage())) {
+        $language = array($language, \Drupal::languageManager()->getCurrentLanguage()->language);
       }
       $q->condition('child.language', $language);
     }
@@ -156,14 +156,14 @@ class menu_CrumbsMultiPlugin_link_title implements crumbs_MultiPlugin_FindTitleI
     // Top-level links have higher priority.
     $q->orderBy('ml.depth', 'ASC');
 
-    if (module_exists('i18n_menu')) {
+    if (\Drupal::moduleHandler()->moduleExists('i18n_menu')) {
       // Filter and sort by language.
       // The 'language' column only exists if i18n_menu is installed.
       // (See i18n_menu_install())
-      $language = LANGUAGE_NONE;
-      if (isset($GLOBALS['language'])) {
-        $language = array($language, $GLOBALS['language']->language);
-        $q->addExpression('case ml.language when :language then 1 else 0 end', 'has_language', array(':language' => LANGUAGE_NONE));
+      $language = \Drupal\Core\Language\Language::LANGCODE_NOT_SPECIFIED;
+      if (isset(\Drupal::languageManager()->getCurrentLanguage())) {
+        $language = array($language, \Drupal::languageManager()->getCurrentLanguage()->language);
+        $q->addExpression('case ml.language when :language then 1 else 0 end', 'has_language', array(':language' => \Drupal\Core\Language\Language::LANGCODE_NOT_SPECIFIED));
         $q->orderBy('has_language');
       }
       $q->condition('language', $language);
@@ -192,12 +192,12 @@ class menu_CrumbsMultiPlugin_link_title implements crumbs_MultiPlugin_FindTitleI
           // Check if i18n_menu < 7.x-1.8 is installed.
           // We need to support older versions, because 7.x-1.8 is a bit buggy.
           // See http://drupal.org/node/1781112#comment-7163324
-          && module_exists('i18n_menu')
+          && \Drupal::moduleHandler()->moduleExists('i18n_menu')
           && !function_exists('_i18n_menu_link_process')
         ) {
           if (1
             && isset($link['language'])
-            && $link['language'] === LANGUAGE_NONE
+            && $link['language'] === \Drupal\Core\Language\Language::LANGCODE_NOT_SPECIFIED
           ) {
             // i18n_menu_translated_menu_link_alter() in older versions of
             // i18n_menu expects $link['language'] to be empty for language
@@ -205,13 +205,13 @@ class menu_CrumbsMultiPlugin_link_title implements crumbs_MultiPlugin_FindTitleI
             unset($link['language']);
           }
           // Give other modules (e.g. i18n_menu) a chance to alter the title.
-          drupal_alter('translated_menu_link', $link, $item['map']);
+          \Drupal::moduleHandler()->alter('translated_menu_link', $link, $item['map']);
           // i18n_menu < 7.x-1.8 sets the 'link_title' instead of 'title'.
           $titles[$row['menu_name']] = $link['link_title'];
         }
         else {
           // Give other modules (e.g. i18n_menu) a chance to alter the title.
-          drupal_alter('translated_menu_link', $link, $item['map']);
+          \Drupal::moduleHandler()->alter('translated_menu_link', $link, $item['map']);
           $titles[$row['menu_name']] = $link['title'];
         }
       }

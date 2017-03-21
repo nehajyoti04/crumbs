@@ -32,7 +32,7 @@ class crumbs_EntityPlugin_Field_TermReference extends crumbs_EntityPlugin_Field_
 
     // Return the path of the first found term, if any.
     foreach ($terms as $tid => $term_info) {
-      $term = taxonomy_term_load($tid);
+      $term = \Drupal::entityManager()->getStorage("taxonomy_term")->load($tid);
       if (!empty($term)) {
         $uri = entity_uri('taxonomy_term', $term);
         if (!empty($uri)) {

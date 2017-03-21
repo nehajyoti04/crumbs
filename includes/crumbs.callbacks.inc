@@ -35,7 +35,7 @@ function crumbs_special_menu_link_title(array $menu_link) {
 function _crumbs_user_access_and(array $permissions, $account = NULL) {
   foreach ($permissions as $permission) {
     if (is_string($permission)) {
-      if (!user_access($permission, $account)) {
+      if (!$account->hasPermission($permission)) {
         return FALSE;
       }
     }
@@ -59,7 +59,7 @@ function _crumbs_user_access_and(array $permissions, $account = NULL) {
 function _crumbs_user_access_or(array $permissions, $account = NULL) {
   foreach ($permissions as $permission) {
     if (is_string($permission)) {
-      if (user_access($permission, $account)) {
+      if ($account->hasPermission($permission)) {
         return TRUE;
       }
     }

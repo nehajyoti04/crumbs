@@ -49,11 +49,14 @@ function crumbs_theme_breadcrumb($variables) {
  */
 function theme_crumbs_breadcrumb_link(array $item) {
   if ('<nolink>' === $item['href']) {
-    return check_plain($item['title']);
+    return \Drupal\Component\Utility\SafeMarkup::checkPlain($item['title']);
   }
   else {
     $options = isset($item['localized_options']) ? $item['localized_options'] : array();
-    return l($item['title'], $item['href'], $options);
+    // @FIXME
+// l() expects a Url object, created from a route name or external URI.
+// return l($item['title'], $item['href'], $options);
+
   }
 }
 
@@ -68,11 +71,14 @@ function theme_crumbs_breadcrumb_current_page(array $variables) {
   $item = $variables['item'];
   switch ($variables['show_current_page']) {
     case CRUMBS_SHOW_CURRENT_PAGE_SPAN:
-      return '<span class="crumbs-current-page">' . check_plain($item['title']) . '</span>';
+      return '<span class="crumbs-current-page">' . \Drupal\Component\Utility\SafeMarkup::checkPlain($item['title']) . '</span>';
     case CRUMBS_SHOW_CURRENT_PAGE_LINK:
       $options = isset($item['localized_options']) ? $item['localized_options'] : array();
-      return l($item['title'], $item['href'], $options);
+      // @FIXME
+// l() expects a Url object, created from a route name or external URI.
+// return l($item['title'], $item['href'], $options);
+
     default:
-      return check_plain($item['title']);
+      return \Drupal\Component\Utility\SafeMarkup::checkPlain($item['title']);
   }
 }

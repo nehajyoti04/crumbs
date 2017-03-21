@@ -13,7 +13,7 @@
  */
 function crumbs_admin_entity_parent_form($form, &$form_state, $entity_type) {
 
-  $info = entity_get_info($entity_type);
+  $info = \Drupal::entityManager()->getDefinition($entity_type);
 
   $text = <<<EOT
 <p>You may specify a pattern for the parent path for each entity bundle.</p>
@@ -26,21 +26,21 @@ crumbs.entityParent.$entity_type.[type]</p>
 EOT;
   $doc .= t($text);
 
-  if (!module_exists('token')) {
+  if (!\Drupal::moduleHandler()->moduleExists('token')) {
     $text = <<<EOT
 <p>You will get more dynamic possibilities, if you install the !token_module_link module.</p>
 EOT;
     $doc .= t($text, array(
-      '!token_module_link' => l('Token', 'http://drupal.org/project/token', array('external' => TRUE)),
+      '!token_module_link' => \Drupal::l('Token', \Drupal\Core\Url::fromUri('http://drupal.org/project/token')),
     ));
   }
-  elseif (!module_exists('entity_token')) {
+  elseif (!\Drupal::moduleHandler()->moduleExists('entity_token')) {
     $text = <<<EOT
 <p>You will get more interesting tokens, if you install the entity_token module.<br/>
 (included in !entity_module_link module)</p>
 EOT;
     $doc .= t($text, array(
-      '!entity_module_link' => l('Entity', 'http://drupal.org/project/entity', array('external' => TRUE)),
+      '!entity_module_link' => \Drupal::l('Entity', \Drupal\Core\Url::fromUri('http://drupal.org/project/entity')),
     ));
   }
 
@@ -54,7 +54,12 @@ EOT;
     '#tree' => TRUE,
   );
 
-  $settings = variable_get('crumbs_' . $entity_type . '_parent_patterns', array());
+  // @FIXME
+// // @FIXME
+// // The correct configuration object could not be determined. You'll need to
+// // rewrite this call manually.
+// $settings = variable_get('crumbs_' . $entity_type . '_parent_patterns', array());
+
 
   $element_defaults = array(
     '#type' => 'textfield',
@@ -62,7 +67,7 @@ EOT;
     // Pathauto has 1280, but we think that 512 is enough.
     '#maxlength' => 512,
   );
-  if (module_exists('token')) {
+  if (\Drupal::moduleHandler()->moduleExists('token')) {
     $element_defaults['#element_validate'][] = 'token_element_validate';
     $element_defaults['#token_types'][] = $info['token type'];
   }
@@ -94,7 +99,7 @@ EOT;
     }
   }
 
-  if (module_exists('token')) {
+  if (\Drupal::moduleHandler()->moduleExists('token')) {
     $form['token_help'] = array(
       '#title' => t('Replacement patterns'),
       '#type' => 'fieldset',

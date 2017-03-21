@@ -102,12 +102,15 @@ class crumbs_Admin_DebugTable {
       $path_eff = '<front>';
     }
 
-    $path_code = '<code>' . check_plain($path_eff) . '</code>';
+    $path_code = '<code>' . \Drupal\Component\Utility\SafeMarkup::checkPlain($path_eff) . '</code>';
     # $path_link = l($path_code, $path_eff, array('html' => TRUE));
     $this->table->td('path', "item.$i", $path_code);
 
     if (isset($title)) {
-      $this->table->td('link', "item.$i", l($title, $path_eff));
+      // @FIXME
+// l() expects a Url object, created from a route name or external URI.
+// $this->table->td('link', "item.$i", l($title, $path_eff));
+
     }
     else {
       // No title - the breadcrumb item will be skipped.
@@ -241,7 +244,7 @@ class crumbs_Admin_DebugTable {
    * @param string $bestCandidateKey
    */
   private function addCandidateCell($candidate, $type, $i, $candidateKey, $bestCandidateKey) {
-    $cellContent = check_plain($candidate);
+    $cellContent = \Drupal\Component\Utility\SafeMarkup::checkPlain($candidate);
     if ('parent' === $type) {
       $cellContent = '<code>' . $cellContent . '</code>';
     }

@@ -16,7 +16,7 @@ abstract class crumbs_MultiPlugin_EntityFindAbstract implements crumbs_MultiPlug
    * @return array
    */
   protected function describeGeneric($api, $entity_type, $label) {
-    $info = entity_get_info($entity_type);
+    $info = \Drupal::entityManager()->getDefinition($entity_type);
     $keys = array();
     foreach ($info['bundles'] as $bundle_key => $bundle) {
       $keys[$bundle_key] = t('!key: !value', array(

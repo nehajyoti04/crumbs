@@ -149,7 +149,7 @@ class crumbs_Admin_WeightsTable {
     $title = $child['#title'];
     unset($child['#description']);
     unset($child['#title']);
-    $header = '<h3>' . $title . '</h3>' . drupal_render($child);
+    $header = '<h3>' . $title . '</h3>' . \Drupal::service("renderer")->render($child);
     $this->sections[$section_key][$key]['data'][]['data'] = $header;
   }
 
@@ -167,7 +167,7 @@ class crumbs_Admin_WeightsTable {
     unset($child['#title']);
     $cells = array(
       '<code>' . $title . '</code>  ',
-      drupal_render($child),
+      \Drupal::service("renderer")->render($child),
     );
 
     $this->rowAddMethodInfo($cells, $meta);

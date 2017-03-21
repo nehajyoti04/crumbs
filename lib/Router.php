@@ -26,7 +26,14 @@ class crumbs_Router {
   function getRouterItem($path) {
     $normalpath = drupal_get_normal_path($path);
     try {
-      $item = menu_get_item($normalpath);
+      // @FIXME
+// menu_get_item() has been removed. To retrieve route information, use the
+// RouteMatch object, which you can retrieve by calling \Drupal::routeMatch().
+// 
+// 
+// @see https://www.drupal.org/node/2203305
+// $item = menu_get_item($normalpath);
+
     }
     catch (Exception $e) {
       // Some modules throw an exception, if a path has unloadable arguments.
@@ -106,7 +113,7 @@ class crumbs_Router {
    *   TRUE, if external path.
    */
   function urlIsExternal($url) {
-    return url_is_external($url);
+    return \Drupal\Component\Utility\UrlHelper::isExternal($url);
   }
 
   /**
@@ -116,7 +123,12 @@ class crumbs_Router {
     if (isset($this->frontNormalPath)) {
       return $this->frontNormalPath;
     }
-    return $this->frontNormalPath = drupal_get_normal_path(variable_get('site_frontpage', 'node'));
+    // @FIXME
+// // @FIXME
+// // This looks like another module's variable. You'll need to rewrite this call
+// // to ensure that it uses the correct configuration object.
+// return $this->frontNormalPath = drupal_get_normal_path(variable_get('site_frontpage', 'node'));
+
   }
 
 }

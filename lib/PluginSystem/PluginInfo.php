@@ -224,11 +224,11 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
    * @see crumbs_PluginSystem_PluginInfo::$userWeights
    */
   protected function get_userWeights() {
-    $user_weights = variable_get('crumbs_weights', array(
-      // The user expects the crumbs.home_title plugin to be dominant.
-      // @todo There must be a better way to do this.
-      'crumbs.home_title' => 0,
-    ));
+    // @FIXME
+// Could not extract the default value because it is either indeterminate, or
+// not scalar. You'll need to provide a default value in
+// config/install/crumbs.settings.yml and config/schema/crumbs.schema.yml.
+$user_weights = \Drupal::config('crumbs.settings')->get('crumbs_weights');
     // '*' always needs to be set.
     if (!isset($user_weights['*'])) {
       // Put '*' last.
@@ -366,7 +366,7 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
       new crumbs_InjectedAPI_Collection_CallbackCollection,
       $defaultValueCollection = new crumbs_InjectedAPI_Collection_DefaultValueCollection);
 
-    foreach (module_implements('crumbs_plugins') as $module) {
+    foreach (\Drupal::moduleHandler()->getImplementations('crumbs_plugins') as $module) {
       $function = $module .'_crumbs_plugins';
       $api->setModule($module);
       $function($api);
@@ -454,7 +454,7 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
     $files = array();
     foreach (scandir($dir) as $candidate) {
       if (preg_match('/^crumbs\.(.+)\.inc$/', $candidate, $m)) {
-        if (module_exists($m[1])) {
+        if (\Drupal::moduleHandler()->moduleExists($m[1])) {
           $files[$m[1]] = $dir . '/' . $candidate;
         }
       }

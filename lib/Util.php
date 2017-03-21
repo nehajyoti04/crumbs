@@ -111,7 +111,7 @@ class crumbs_Util {
     if ($item['map'][$index] instanceof stdClass) {
       return $item['map'][$index];
     }
-    $entities = entity_load($entity_type, array($item['original_map'][$index]));
+    $entities = \Drupal::entityManager()->getStorage($entity_type, array($item['original_map'][$index]));
     return reset($entities);
   }
 }

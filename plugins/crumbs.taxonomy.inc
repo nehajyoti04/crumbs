@@ -10,12 +10,19 @@ function taxonomy_crumbs_plugins($api) {
 
   $api->multiPlugin('termParent');
 
-  foreach (field_info_fields() as $field_name => $field_info) {
-    if ($field_info['type'] === 'taxonomy_term_reference') {
-      $plugin = new crumbs_EntityPlugin_Field_TermReference($field_name, $field_info['bundles']);
-      $api->entityParentPlugin('termReference.' . $field_name, $plugin, array_keys($field_info['bundles']));
-    }
-  }
+  // @FIXME
+// Fields and field instances are now exportable configuration entities, and
+// the Field Info API has been removed.
+// 
+// 
+// @see https://www.drupal.org/node/2012896
+// foreach (field_info_fields() as $field_name => $field_info) {
+//     if ($field_info['type'] === 'taxonomy_term_reference') {
+//       $plugin = new crumbs_EntityPlugin_Field_TermReference($field_name, $field_info['bundles']);
+//       $api->entityParentPlugin('termReference.' . $field_name, $plugin, array_keys($field_info['bundles']));
+//     }
+//   }
+
   $api->disabledByDefault('termReference.*');
 }
 
@@ -26,7 +33,7 @@ class taxonomy_CrumbsMultiPlugin_termParent implements crumbs_MultiPlugin {
    * {@inheritdoc}
    */
   function describe($api) {
-    foreach (taxonomy_get_vocabularies() as $voc) {
+    foreach (\Drupal\taxonomy\Entity\Vocabulary::loadMultiple() as $voc) {
       $api->ruleWithLabel($voc->machine_name, $voc->name, t('Vocabulary'));
     }
     // Now set a generic title for the entire plugin.

@@ -9,7 +9,7 @@ class crumbs_EntityPlugin_Field_UserReference extends crumbs_EntityPlugin_Field_
     foreach ($items as $item) {
       if (1
         && !empty($item['uid'])
-        && ($target_user = user_load($item['uid']))
+        && ($target_user = \Drupal::entityManager()->getStorage('user')->load($item['uid']))
         && ($uri = entity_uri('user', $target_user))
       ) {
         return $uri['path'];

@@ -12,7 +12,7 @@ function theme_crumbs_weights_expansible(&$vars) {
   $element = $vars['element'];
 
   $rows = array();
-  foreach (element_children($element) as $key) {
+  foreach (\Drupal\Core\Render\Element::children($element) as $key) {
     $cells = array();
     $cells[] = $key;
     $cells[] = render($element[$key]);
@@ -50,8 +50,17 @@ function theme_crumbs_weights_expansible(&$vars) {
     $rows[] = $cells;
   }
 
-  return theme('table', array(
-    'rows' => $rows,
-    'attributes' => array('id' => 'crumbs_weights_expansible'),
-  ));
+  // @FIXME
+// theme() has been renamed to _theme() and should NEVER be called directly.
+// Calling _theme() directly can alter the expected output and potentially
+// introduce security issues (see https://www.drupal.org/node/2195739). You
+// should use renderable arrays instead.
+// 
+// 
+// @see https://www.drupal.org/node/2195739
+// return theme('table', array(
+//     'rows' => $rows,
+//     'attributes' => array('id' => 'crumbs_weights_expansible'),
+//   ));
+
 }

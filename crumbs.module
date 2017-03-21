@@ -11,7 +11,7 @@ define('CRUMBS_SHOW_CURRENT_PAGE_SPAN', 5);
 define('CRUMBS_SHOW_CURRENT_PAGE_LINK', 9);
 
 // Register the module-provided autoloader if xautoload is missing.
-if (!module_exists('xautoload')) {
+if (!\Drupal::moduleHandler()->moduleExists('xautoload')) {
   spl_autoload_register('_crumbs_autoload');
 }
 

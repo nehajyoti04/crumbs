@@ -7,31 +7,38 @@
  * @param crumbs_InjectedAPI_hookCrumbsPlugins $api
  */
 function entityreference_prepopulate_crumbs_plugins($api) {
-  foreach (field_info_fields() as $field_name => $field_info) {
-    if (0
-      || $field_info['type'] !== 'entityreference'
-      || empty($field_info['bundles']['node'])
-      || empty($field_info['settings']['target_type'])
-    ) {
-      continue;
-    }
+  // @FIXME
+// Fields and field instances are now exportable configuration entities, and
+// the Field Info API has been removed.
+// 
+// 
+// @see https://www.drupal.org/node/2012896
+// foreach (field_info_fields() as $field_name => $field_info) {
+//     if (0
+//       || $field_info['type'] !== 'entityreference'
+//       || empty($field_info['bundles']['node'])
+//       || empty($field_info['settings']['target_type'])
+//     ) {
+//       continue;
+//     }
+// 
+//     $target_type = $field_info['settings']['target_type'];
+// 
+//     foreach ($field_info['bundles']['node'] as $node_type) {
+//       $instance = field_info_instance('node', $field_name, $node_type);
+//       if (0
+//         || empty($instance['default_value_function'])
+//         || 'entityreference_prepopulate_field_default_value' !== $instance['default_value_function']
+//       ) {
+//         continue;
+//       }
+// 
+//       $route = 'node/add/' . str_replace('_', '-', $node_type);
+//       $plugin = new entityreference_prepopulate_CrumbsMonoPlugin_node($node_type, $field_name, $target_type);
+//       $api->routeMonoPlugin($route, "node.$field_name.$node_type", $plugin);
+//     }
+//   }
 
-    $target_type = $field_info['settings']['target_type'];
-
-    foreach ($field_info['bundles']['node'] as $node_type) {
-      $instance = field_info_instance('node', $field_name, $node_type);
-      if (0
-        || empty($instance['default_value_function'])
-        || 'entityreference_prepopulate_field_default_value' !== $instance['default_value_function']
-      ) {
-        continue;
-      }
-
-      $route = 'node/add/' . str_replace('_', '-', $node_type);
-      $plugin = new entityreference_prepopulate_CrumbsMonoPlugin_node($node_type, $field_name, $target_type);
-      $api->routeMonoPlugin($route, "node.$field_name.$node_type", $plugin);
-    }
-  }
 }
 
 class entityreference_prepopulate_CrumbsMonoPlugin_node implements crumbs_MonoPlugin_FindParentInterface {
@@ -87,7 +94,7 @@ class entityreference_prepopulate_CrumbsMonoPlugin_node implements crumbs_MonoPl
       return NULL;
     }
 
-    $target_entities = entity_load($this->targetType, array($v));
+    $target_entities = \Drupal::entityManager()->getStorage($this->targetType, array($v));
     if (empty($target_entities[$v])) {
       return NULL;
     }

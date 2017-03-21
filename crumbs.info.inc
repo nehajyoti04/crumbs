@@ -12,8 +12,16 @@ function crumbs_permission() {
 }
 
 /**
- * Implements hook_menu().
+ * @FIXME
+ * This implementation of hook_menu() cannot be automatically converted because
+ * it contains logic (i.e., branching statements, function calls, object
+ * instantiation, etc.) You will need to convert it manually. Sorry!
+ *
+ * For more information on how to convert hook_menu() to Drupal 8's new routing
+ * and linking systems, see https://api.drupal.org/api/drupal/core%21includes%21menu.inc/group/menu/8
  */
+
+
 function crumbs_menu() {
   $base = 'admin/structure/crumbs';
   $items = array();
@@ -51,7 +59,7 @@ function crumbs_menu() {
     'weight' => 20,
     'type' => MENU_LOCAL_TASK,
   );
-  if (module_exists('devel')) {
+  if (\Drupal::moduleHandler()->moduleExists('devel')) {
     $items["$base/debug/plugins"] = array(
       'title' => 'Plugin results',
       'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -69,7 +77,7 @@ function crumbs_menu() {
 
   foreach (array(
     'node' => 'Node',
-    'taxonomy_term' => module_exists('taxonomy') ? 'Taxonomy' : FALSE,
+    'taxonomy_term' => \Drupal::moduleHandler()->moduleExists('taxonomy') ? 'Taxonomy' : FALSE,
     'user' => 'User',
   ) as $entity_type => $title) {
     if (FALSE !== $title) {
@@ -93,7 +101,7 @@ function crumbs_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
 
-  if (module_exists('menu')) {
+  if (\Drupal::moduleHandler()->moduleExists('menu')) {
     // Placeholder route for <nolink> items from special_menu_items module.
     /* @see menu_link_load() */
     $items['crumbs/special-menu-item/%menu_link'] = array(
@@ -173,11 +181,19 @@ function crumbs_theme_registry_alter(array &$registry) {
 
   // Remember the original theme function for the settings page.
   $f = $registry['breadcrumb']['function'];
-  $originals = variable_get('crumbs_original_theme_breadcrumb', array());
+  // @FIXME
+// Could not extract the default value because it is either indeterminate, or
+// not scalar. You'll need to provide a default value in
+// config/install/crumbs.settings.yml and config/schema/crumbs.schema.yml.
+$originals = \Drupal::config('crumbs.settings')->get('crumbs_original_theme_breadcrumb');
   $originals[$theme->name] = $f;
-  variable_set('crumbs_original_theme_breadcrumb', $originals);
+  \Drupal::configFactory()->getEditable('crumbs.settings')->set('crumbs_original_theme_breadcrumb', $originals)->save();
 
-  $settings = variable_get('crumbs_override_theme_breadcrumb', array('theme_breadcrumb'));
+  // @FIXME
+// Could not extract the default value because it is either indeterminate, or
+// not scalar. You'll need to provide a default value in
+// config/install/crumbs.settings.yml and config/schema/crumbs.schema.yml.
+$settings = \Drupal::config('crumbs.settings')->get('crumbs_override_theme_breadcrumb');
   if (in_array($f, $settings, TRUE)) {
     $registry['breadcrumb']['includes'][] = drupal_get_path('module', 'crumbs') . '/crumbs.theme.inc';
     $registry['breadcrumb']['function'] = 'crumbs_theme_breadcrumb';

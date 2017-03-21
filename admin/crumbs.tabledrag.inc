@@ -13,17 +13,33 @@ function theme_crumbs_weights_tabledrag(&$vars) {
 
   $table = new crumbs_Admin_WeightsTable($element['#crumbs_plugin_info']);
 
-  foreach (element_children($element) as $key) {
+  foreach (\Drupal\Core\Render\Element::children($element) as $key) {
     $child = $element[$key];
     $table->addElement($key, $child);
   }
 
   $rows = $table->getRows();
 
-  drupal_add_tabledrag('crumbs_weights_tabledrag', 'order', 'sibling', 'crumbs-weight-element');
+  // @FIXME
+// TableDrag is now attached with the #tabledrag property of certain render
+// arrays. drupal_add_tabledrag() is now internal and should never be called directly.
+// 
+// 
+// @see https://www.drupal.org/node/2160571
+// drupal_add_tabledrag('crumbs_weights_tabledrag', 'order', 'sibling', 'crumbs-weight-element');
 
-  return theme('table', array(
-    'rows' => $rows,
-    'attributes' => array('id' => 'crumbs_weights_tabledrag'),
-  ));
+
+  // @FIXME
+// theme() has been renamed to _theme() and should NEVER be called directly.
+// Calling _theme() directly can alter the expected output and potentially
+// introduce security issues (see https://www.drupal.org/node/2195739). You
+// should use renderable arrays instead.
+// 
+// 
+// @see https://www.drupal.org/node/2195739
+// return theme('table', array(
+//     'rows' => $rows,
+//     'attributes' => array('id' => 'crumbs_weights_tabledrag'),
+//   ));
+
 }

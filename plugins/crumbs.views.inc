@@ -180,7 +180,7 @@ class views_CrumbsMonoPlugin_PageTitle implements crumbs_MonoPlugin_FindTitleInt
     if (is_string($title) && '' !== $title) {
       // Use decode_entities() to undo duplicate check_plain().
       // See https://drupal.org/comment/7916895#comment-7916895
-      return decode_entities($title);
+      return \Drupal\Component\Utility\Html::decodeEntities($title);
     }
 
     return NULL;
@@ -225,7 +225,7 @@ class views_CrumbsMonoPlugin_PageTitle implements crumbs_MonoPlugin_FindTitleInt
     if (!empty($token_string)) {
       // Use decode_entities() to undo duplicate check_plain().
       // See https://drupal.org/comment/7916895#comment-7916895
-      return decode_entities(strtr($token_string, $view->build_info['substitutions']));
+      return \Drupal\Component\Utility\Html::decodeEntities(strtr($token_string, $view->build_info['substitutions']));
     }
 
     return NULL;

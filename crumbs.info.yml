@@ -1,0 +1,8 @@
+name: Crumbs
+description: 'The ultimate breadcrumbs module'
+core: 8.x
+php: '5.2'
+version: 7.x-2.5
+project: crumbs
+datestamp: '1459362841'
+type: module

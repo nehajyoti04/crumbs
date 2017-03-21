@@ -64,7 +64,7 @@ abstract class crumbs_Container_AbstractLazyDataCached {
    * @throws Exception
    */
   private function getCached($key) {
-    $cache = cache_get("crumbs:$key");
+    $cache = \Drupal::cache()->get("crumbs:$key");
     if (isset($cache->data)) {
       // We do the serialization manually,
       // to prevent Drupal from intercepting exceptions.
@@ -79,7 +79,7 @@ abstract class crumbs_Container_AbstractLazyDataCached {
     if (!is_array($data)) {
       throw new Exception("Only arrays can be cached in crumbs_CachedLazyPluginInfo.");
     }
-    cache_set("crumbs:$key", serialize($data));
+    \Drupal::cache()->set("crumbs:$key", serialize($data));
     return $data;
   }
 

@@ -55,7 +55,7 @@ class comment_CrumbsMonoPlugin_comment implements crumbs_MonoPlugin {
    * @return string
    */
   function findParent__comment_x($path, $item) {
-    $comment = comment_load($item['original_map'][1]);
+    $comment = \Drupal::entityManager()->getStorage('comment')->load($item['original_map'][1]);
     if (!empty($comment->nid)) {
       return 'node/' . $comment->nid;
     }
