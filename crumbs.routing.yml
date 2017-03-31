@@ -1,0 +1,36 @@
+crumbs.weight:
+  path: 'admin/structure/crumbs'
+  defaults:
+    _form: '\Drupal\crumbs\Form\AdminWeightForm'
+    _title: 'Crumbs'
+  requirements:
+#  TODO add permission later.
+    _access: 'TRUE'
+
+crumbs.display:
+  path: 'admin/structure/crumbs/display'
+  defaults:
+    _form: '\Drupal\crumbs\Form\AdminDisplayForm'
+    _title: 'Display'
+  requirements:
+#  TODO add permission later.
+    _access: 'TRUE'
+
+crumbs.debug:
+  path: 'admin/structure/crumbs/debug'
+  defaults:
+    _controller: '\Drupal\crumbs\Controller\CrumbsController::crumbsDebugPage'
+    _title: 'Debug'
+  requirements:
+    # Needs to be accessed by an anonymous user.
+    _access: 'TRUE'
+
+crumbs.menu_link_page:
+  path: 'crumbs/special-menu-item/{menu_link}'
+  defaults:
+    _controller: '\Drupal\crumbs\Controller\CrumbsController::crumbsSpecialMenuLinkPage'
+#    _title: 'Debug'
+  requirements:
+    # Needs to be accessed by an anonymous user.
+    _access: 'TRUE'
+

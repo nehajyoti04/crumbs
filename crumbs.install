@@ -1,87 +1,87 @@
 <?php
-
-/**
- * @file
- * Install, update and uninstall functions for the crumbs module.
- */
-
-/**
- * Implements hook_uninstall().
- */
-function crumbs_uninstall() {
-  // @FIXME
-// // @FIXME
-// // This looks like another module's variable. You'll need to rewrite this call
-// // to ensure that it uses the correct configuration object.
-// variable_del('crumbs');
-
-  \Drupal::config('crumbs.settings')->clear('crumbs_weights')->save();
-  \Drupal::config('crumbs.settings')->clear('crumbs_show_current_page')->save();
-  \Drupal::config('crumbs.settings')->clear('crumbs_node_parent_patterns')->save();
-  \Drupal::config('crumbs.settings')->clear('crumbs_show_front_page')->save();
-  \Drupal::config('crumbs.settings')->clear('crumbs_home_link_title')->save();
-  \Drupal::config('crumbs.settings')->clear('crumbs_minimum_trail_items')->save();
-  \Drupal::config('crumbs.settings')->clear('crumbs_separator_span')->save();
-  \Drupal::config('crumbs.settings')->clear('crumbs_separator')->save();
-  \Drupal::config('crumbs.settings')->clear('crumbs_override_theme_breadcrumb')->save();
-  \Drupal::config('crumbs.settings')->clear('crumbs_original_theme_breadcrumb')->save();
-}
-
-/**
- * Restore the original name of taxonomy.termReference.* plugins,
- * without losing configuration.
- */
-function crumbs_update_7201() {
-  // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/crumbs.settings.yml and config/schema/crumbs.schema.yml.
-$user_weights = \Drupal::config('crumbs.settings')->get('crumbs_weights');
-
-  // Rename taxonomy.termReference plugins.
-  foreach ($user_weights as $old_key => $value) {
-    if ('taxonomy.field_' === substr($old_key, 0, 15)) {
-      $new_key = 'taxonomy.termReference.' . substr($old_key, 9);
-      $user_weights[$new_key] = $value;
-    }
-  }
-
-  // Save and flush caches.
-  \Drupal::configFactory()->getEditable('crumbs.settings')->set('crumbs_weights', $user_weights)->save();
-  cache_clear_all();
-  cache_clear_all('crumbs:', 'cache', TRUE);
-}
-
-/**
- * Rename the crumbs_override_theme_breadcrumb settings.
- */
-function crumbs_update_7202() {
-  // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/crumbs.settings.yml and config/schema/crumbs.schema.yml.
-$overrides = \Drupal::config('crumbs.settings')->get('crumbs_override_theme_breadcrumb');
-  $overrides_updated = array();
-  foreach ($overrides as $key => $value) {
-    if (!empty($value)) {
-      if ('(other)' === $value) {
-        $f = 'theme_breadcrumb';
-      }
-      elseif ('_breadcrumb' !== substr($value, -11)) {
-        $f = $value . '_breadcrumb';
-      }
-      else {
-        $f = $value;
-      }
-      $overrides_updated[$f] = $f;
-    }
-  }
-  \Drupal::configFactory()->getEditable('crumbs.settings')->set('crumbs_override_theme_breadcrumb', $overrides_updated)->save();
-}
-
-/**
- * Flush crumbs plugin cache after refactoring of the plugin system.
- */
-function crumbs_update_7203() {
-  cache_clear_all('crumbs:', 'cache', TRUE);
-}
+//
+///**
+// * @file
+// * Install, update and uninstall functions for the crumbs module.
+// */
+//
+///**
+// * Implements hook_uninstall().
+// */
+//function crumbs_uninstall() {
+//  // @FIXME
+//// // @FIXME
+//// // This looks like another module's variable. You'll need to rewrite this call
+//// // to ensure that it uses the correct configuration object.
+//// variable_del('crumbs');
+//
+//  \Drupal::config('crumbs.settings')->clear('crumbs_weights')->save();
+//  \Drupal::config('crumbs.settings')->clear('crumbs_show_current_page')->save();
+//  \Drupal::config('crumbs.settings')->clear('crumbs_node_parent_patterns')->save();
+//  \Drupal::config('crumbs.settings')->clear('crumbs_show_front_page')->save();
+//  \Drupal::config('crumbs.settings')->clear('crumbs_home_link_title')->save();
+//  \Drupal::config('crumbs.settings')->clear('crumbs_minimum_trail_items')->save();
+//  \Drupal::config('crumbs.settings')->clear('crumbs_separator_span')->save();
+//  \Drupal::config('crumbs.settings')->clear('crumbs_separator')->save();
+//  \Drupal::config('crumbs.settings')->clear('crumbs_override_theme_breadcrumb')->save();
+//  \Drupal::config('crumbs.settings')->clear('crumbs_original_theme_breadcrumb')->save();
+//}
+//
+///**
+// * Restore the original name of taxonomy.termReference.* plugins,
+// * without losing configuration.
+// */
+//function crumbs_update_7201() {
+//  // @FIXME
+//// Could not extract the default value because it is either indeterminate, or
+//// not scalar. You'll need to provide a default value in
+//// config/install/crumbs.settings.yml and config/schema/crumbs.schema.yml.
+//$user_weights = \Drupal::config('crumbs.settings')->get('crumbs_weights');
+//
+//  // Rename taxonomy.termReference plugins.
+//  foreach ($user_weights as $old_key => $value) {
+//    if ('taxonomy.field_' === substr($old_key, 0, 15)) {
+//      $new_key = 'taxonomy.termReference.' . substr($old_key, 9);
+//      $user_weights[$new_key] = $value;
+//    }
+//  }
+//
+//  // Save and flush caches.
+//  \Drupal::configFactory()->getEditable('crumbs.settings')->set('crumbs_weights', $user_weights)->save();
+//  cache_clear_all();
+//  cache_clear_all('crumbs:', 'cache', TRUE);
+//}
+//
+///**
+// * Rename the crumbs_override_theme_breadcrumb settings.
+// */
+//function crumbs_update_7202() {
+//  // @FIXME
+//// Could not extract the default value because it is either indeterminate, or
+//// not scalar. You'll need to provide a default value in
+//// config/install/crumbs.settings.yml and config/schema/crumbs.schema.yml.
+//$overrides = \Drupal::config('crumbs.settings')->get('crumbs_override_theme_breadcrumb');
+//  $overrides_updated = array();
+//  foreach ($overrides as $key => $value) {
+//    if (!empty($value)) {
+//      if ('(other)' === $value) {
+//        $f = 'theme_breadcrumb';
+//      }
+//      elseif ('_breadcrumb' !== substr($value, -11)) {
+//        $f = $value . '_breadcrumb';
+//      }
+//      else {
+//        $f = $value;
+//      }
+//      $overrides_updated[$f] = $f;
+//    }
+//  }
+//  \Drupal::configFactory()->getEditable('crumbs.settings')->set('crumbs_override_theme_breadcrumb', $overrides_updated)->save();
+//}
+//
+///**
+// * Flush crumbs plugin cache after refactoring of the plugin system.
+// */
+//function crumbs_update_7203() {
+//  cache_clear_all('crumbs:', 'cache', TRUE);
+//}
