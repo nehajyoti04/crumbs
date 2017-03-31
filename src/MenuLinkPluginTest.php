@@ -26,7 +26,7 @@ class MenuLinkPluginTest extends \DrupalWebTestCase {
     $q->fields('ml', array('mlid', 'link_path', 'menu_name'));
     $titles_by_path = array();
     foreach ($q->execute() as $row) {
-      $link = menu_link_load($row->mlid);
+      $link = \Drupal::service('plugin.manager.menu.link')->createInstance($row->mlid);
       if ($link && !isset($links_by_path[$row->link_path][$row->menu_name])) {
         $titles_by_path[$row->link_path][$row->menu_name] = $link['title'];
       }

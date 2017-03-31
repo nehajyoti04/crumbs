@@ -6,3 +6,5 @@ version: 7.x-2.5
 project: crumbs
 datestamp: '1459362841'
 type: module
+dependencies:
+  - menu_ui:menu_ui

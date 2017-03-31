@@ -1,13 +1,15 @@
 <?php
 namespace Drupal\crumbs;
 
+use crumbs_MultiPlugin_FindTitleInterface;
+
 class menu_CrumbsMultiPlugin_link_title implements crumbs_MultiPlugin_FindTitleInterface {
 
   /**
    * {@inheritdoc}
    */
   function describe($api) {
-    foreach (menu_get_menus() as $key => $title) {
+    foreach (menu_ui_get_menus() as $key => $title) {
       $api->ruleWithLabel($key, $title, t('Menu'));
     }
     $api->descWithLabel(t('Menu link title'), t('Title'));
@@ -20,14 +22,6 @@ class menu_CrumbsMultiPlugin_link_title implements crumbs_MultiPlugin_FindTitleI
    * {@inheritdoc}
    */
   function findTitle($path, $item) {
-
-    // We need to load the original title from menu_router,
-    // because _menu_item_localize() does a decision based on that, that we want
-    // to reproduce.
-    $q = db_select('menu_router', 'mr');
-    $q->condition('path', $item['path']);
-    $q->fields('mr', array('title'));
-    $router_title = $q->execute()->fetchField();
 
     // Reproduce menu_link_load() with _menu_link_translate() and
     // _menu_item_localize(). However, a lot of information is already provided
@@ -59,15 +53,8 @@ class menu_CrumbsMultiPlugin_link_title implements crumbs_MultiPlugin_FindTitleI
     while ($row = $result->fetchAssoc()) {
       if (!isset($titles[$row['menu_name']])) {
         $link = $row + $item;
-        if ($row['link_title'] == $router_title) {
-          // Use the localized title from menu_router.
-          // Fortunately, this is already computed by menu_get_item().
-          $link['title'] = $item['title'];
-        }
-        else {
           // Use the untranslated title from menu_links.
           $link['title'] = $row['link_title'];
-        }
         if (!is_array($link['options'])) {
           // hook_translated_menu_link_alter() expects options to be an array.
           $link['options'] = unserialize($link['options']);

@@ -1,13 +1,15 @@
 <?php
 namespace Drupal\crumbs;
 
+use crumbs_MultiPlugin_FindParentInterface;
+
 class menu_CrumbsMultiPlugin_hierarchy implements crumbs_MultiPlugin_FindParentInterface {
 
   /**
    * {@inheritdoc}
    */
   function describe($api) {
-    foreach (menu_get_menus() as $key => $title) {
+    foreach (menu_ui_get_menus() as $key => $title) {
       $api->ruleWithLabel($key, $title, t('Menu'));
     }
     $api->descWithLabel(t('The parent item\'s path'), t('Parent'));
@@ -83,7 +85,7 @@ class menu_CrumbsMultiPlugin_hierarchy implements crumbs_MultiPlugin_FindParentI
       return array();
     }
     $menu_name = $item['map'][2]['menu_name'];
-    $parent_link = menu_link_load($item['map'][2]['plid']);
+    $parent_link = \Drupal::service('plugin.manager.menu.link')->createInstance($item['map'][2]['plid']);
 
     if (empty($parent_link['link_path'])) {
       return array();

@@ -167,25 +167,25 @@ function _crumbs_autoload($class) {
 //// Service cache
 //// -----------------------------------------------------------------------------
 //
-///**
-// * Get the service with the given key.
-// * If it does not exist, it will be lazy-created with all its dependencies.
-// *
-// * @param string|null $key
-// *   Optional service name.
-// *
-// * @return crumbs_DIC_ServiceContainer|object
-// *   The service container, or a service obtained from the container.
-// */
-//function crumbs($key = NULL) {
-//  static $services = NULL;
-//  if (!isset($services)) {
-//    $services = new crumbs_DIC_ServiceContainer();
-//  }
-//  if (isset($key)) {
-//    return $services->__get($key);
-//  }
-//  else {
-//    return $services;
-//  }
-//}
+/**
+ * Get the service with the given key.
+ * If it does not exist, it will be lazy-created with all its dependencies.
+ *
+ * @param string|null $key
+ *   Optional service name.
+ *
+ * @return crumbs_DIC_ServiceContainer|object
+ *   The service container, or a service obtained from the container.
+ */
+function crumbs($key = NULL) {
+  static $services = NULL;
+  if (!isset($services)) {
+    $services = new crumbs_DIC_ServiceContainer();
+  }
+  if (isset($key)) {
+    return $services->__get($key);
+  }
+  else {
+    return $services;
+  }
+}
