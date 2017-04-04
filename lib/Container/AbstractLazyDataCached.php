@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Cache\Cache;
+
 abstract class crumbs_Container_AbstractLazyDataCached {
 
   /**
@@ -34,7 +36,8 @@ abstract class crumbs_Container_AbstractLazyDataCached {
    */
   function flushCaches() {
     $this->data = array();
-    cache_clear_all('crumbs:', 'cache', TRUE);
+//    cache_clear_all('crumbs:', 'cache', TRUE);
+    Cache::invalidateTags(array('rendered'));
   }
 
   /**

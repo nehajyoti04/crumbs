@@ -31,6 +31,10 @@ class AdminWeightForm extends ConfigFormBase {
     $form = array();
 
     $info = crumbs()->pluginInfo;
+//    kint("info");
+//    kint($info);
+//    kint("user weight");
+//    kint($info->userWeights);
 
     // Re-discover plugins, when the admin visits the weights configuration form.
     $info->flushCaches();
@@ -42,19 +46,19 @@ class AdminWeightForm extends ConfigFormBase {
       '#crumbs_plugin_info' => $info,
     );
 
-    switch ($type) {
-      case 'textual':
-        // You need to enable crumbs_labs to get this.
-        $form['crumbs_weights']['#type'] = 'crumbs_weights_textual';
-        break;
-      case 'expansible':
-        // You need to enable crumbs_labs to get this.
-        $form['crumbs_weights']['#type'] = 'crumbs_weights_expansible';
-        break;
-      case 'tabledrag':
-      default:
-        $form['crumbs_weights']['#type'] = 'crumbs_weights_tabledrag';
-    }
+//    switch ($type) {
+//      case 'textual':
+//        // You need to enable crumbs_labs to get this.
+//        $form['crumbs_weights']['#type'] = 'crumbs_weights_textual';
+//        break;
+//      case 'expansible':
+//        // You need to enable crumbs_labs to get this.
+//        $form['crumbs_weights']['#type'] = 'crumbs_weights_expansible';
+//        break;
+//      case 'tabledrag':
+//      default:
+//        $form['crumbs_weights']['#type'] = 'crumbs_weights_tabledrag';
+//    }
 
 //    $form['#submit'][] = '_crumbs_admin_flush_cache';
     return parent::buildForm($form, $form_state);

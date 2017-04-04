@@ -9,62 +9,26 @@
 function views_crumbs_plugins($api) {
 
   // We try to get all views pages but avoid views_get_all_view() for performance.
-  $q = db_select('menu_router', 'mr');
-  $q->condition('page_callback', 'views_page');
-  $q->fields('mr', array('path', 'page_arguments', 'title', 'title_callback'));
+  $q = db_select('router', 'mr');
+  $q->condition('name', 'views.%', 'LIKE');
+  $q->fields('mr', array('name', 'path'));
 
   $staticDisplays = array();
   $dynamicDisplays = array();
 
   foreach ($q->execute() as $row) {
-
-    if (0
-      // Title already given by the menu_router system?
-      || !empty($row->title)
-      || (!empty($row->title_callback) && 't' !== $row->title_callback)
-    ) {
-      continue;
-    }
-
-    $args = unserialize($row->page_arguments);
-
-    if (2 > count($args)) {
-      // Not really a views display, too few arguments.
-      continue;
-    }
-    list($view_name, $view_display_ids) = $args;
-    if (!is_string($view_name)) {
-      // Not really a views display, wrong type of arguments.
-      continue;
-    }
-    // The second argument is usually just a string identifying the display id.
-    // However, it can also be an array of display ids.
-    // @see view::choose_display()
-    // Unfortunately, it can also be complete junk.
-    // @see https://www.drupal.org/node/2316873#comment-9037925
-    if (!is_array($view_display_ids)) {
-      $view_display_ids = array($view_display_ids);
-    }
-
+    $explode = explode('.', $row->name);
     if ('%' !== substr($row->path, -1)) {
       // The path does not end with "%", so the title should not depend on a
       // contextual filter.
-      foreach ($view_display_ids as $view_display_id) {
-        if (!is_string($view_display_id)) {
-          continue;
-        }
-        $staticDisplays[$view_name][$view_display_id][] = $row->path;
-      }
+
+        $staticDisplays[$explode[1]][$explode[2]][] = $row->path;
     }
     else {
-      // This is a views display with contextual filters.
-      foreach ($view_display_ids as $view_display_id) {
-        if (!is_string($view_display_id)) {
-          continue;
-        }
-        $dynamicDisplays[$view_name][$view_display_id][] = $row->path;
-      }
+
+        $dynamicDisplays[$explode[1]][$explode[2]][] = $row->path;
     }
+
   }
 
   foreach ($staticDisplays as $view_name => $displays) {

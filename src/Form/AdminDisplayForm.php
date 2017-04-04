@@ -4,6 +4,7 @@ namespace Drupal\crumbs\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 class AdminDisplayForm extends ConfigFormBase {
 
@@ -41,12 +42,12 @@ class AdminDisplayForm extends ConfigFormBase {
     $form['home_link_settings']['crumbs_show_front_page'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show the home page link (recommended).'),
-      '#default_value' => $config->get('crumbs_show_front_page', TRUE),
+      '#default_value' => $config->get('crumbs_show_front_page'),
     );
     $form['home_link_settings']['crumbs_home_link_title'] = array(
       '#type' => 'textfield',
       '#title' => t('Home link title'),
-      '#default_value' => $config->get('crumbs_home_link_title', 'Home'),
+      '#default_value' => $config->get('crumbs_home_link_title'),
       '#description' => t('Title of the link that points to the front page.'),
       '#size' => 30,
     );
@@ -69,7 +70,7 @@ class AdminDisplayForm extends ConfigFormBase {
         )),
         CRUMBS_SHOW_CURRENT_PAGE_LINK => t('Show, as a link.'),
       ),
-      '#default_value' => $config->get('crumbs_show_current_page', FALSE),
+      '#default_value' => $config->get('crumbs_show_current_page'),
     );
 
     // Visibility settings
@@ -84,7 +85,7 @@ class AdminDisplayForm extends ConfigFormBase {
       '#type' => 'radios',
       '#title' => t('Shortest visible breadcrumb'),
       '#description' => t('If the trail has fewer items than specified here, the breadcrumb will be hidden.'),
-      '#default_value' => $config->get('crumbs_minimum_trail_items', 2),
+      '#default_value' => $config->get('crumbs_minimum_trail_items'),
       '#options' => array(
         1 => "($home)",
         2 => "(<a href='#'>$home</a>) &raquo; ($current)",
@@ -102,7 +103,7 @@ class AdminDisplayForm extends ConfigFormBase {
       '#title' => t('Wrap the separator in !tags tags:', array(
         '!tags' => '<code>&lt;span class="crumbs-separator"&gt;</code>',
       )),
-      '#default_value' => (bool)$config->get('crumbs_separator_span', FALSE),
+      '#default_value' => (bool)$config->get('crumbs_separator_span'),
     );
     $separator_notes = '';
     foreach (array(
@@ -119,7 +120,7 @@ class AdminDisplayForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => t('Custom separator HTML'),
       '#description' => $separator_desc,
-      '#default_value' => $config->get('crumbs_separator', ' &raquo; '),
+      '#default_value' => $config->get('crumbs_separator'),
       '#element_validate' => array('_crumbs_validate_separator_xss'),
     );
     $form['separator_settings']['notes'] = array(
@@ -130,14 +131,18 @@ class AdminDisplayForm extends ConfigFormBase {
     // Theme override settings
     $theme_override_options = array('theme_breadcrumb' => array());
     $themes_need_flush = FALSE;
-    $originals = $config->get('crumbs_original_theme_breadcrumb', array());
-    foreach (list_themes() as $theme_name => $theme_obj) {
+    $originals = $config->get('crumbs_original_theme_breadcrumb');
+    $theme_handler = \Drupal::service('theme_handler');
+
+    $themes = $theme_handler->listInfo();
+    foreach ($themes as $theme_name => $theme_obj) {
       if ('1' !== '' . $theme_obj->status) {
         // Theme is disabled.
         continue;
       }
-      $path = 'admin/appearance/settings/' . $theme_name;
-      $link = l($theme_obj->info['name'], $path);
+      $path = '/admin/appearance/settings/' . $theme_name;
+      $url = Url::fromUserInput($path, array('absolute' => TRUE));
+      $link = \Drupal::l($theme_obj->info['name'], $url);
       if (!isset($originals[$theme_name])) {
         $f = 'theme_breadcrumb';
         $link .= '?';
@@ -169,7 +174,7 @@ class AdminDisplayForm extends ConfigFormBase {
         '#type' => 'checkboxes',
         '#options' => $theme_override_options,
         '#html' => TRUE,
-        '#default_value' => $config->get('crumbs_override_theme_breadcrumb', array('theme_breadcrumb')),
+        '#default_value' => $config->get('crumbs_override_theme_breadcrumb'),
         '#title' => t('Override theme implementations'),
       );
       $form['theme_override_settings']['notes'] = array(
@@ -195,6 +200,16 @@ class AdminDisplayForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+
+    $this->config('crumbs.settings')
+      ->set('crumbs_show_front_page', $form_state->getValue('crumbs_show_front_page'))
+      ->set('crumbs_home_link_title', $form_state->getValue('crumbs_home_link_title'))
+      ->set('crumbs_show_current_page', $form_state->getValue('crumbs_show_current_page'))
+      ->set('crumbs_minimum_trail_items', $form_state->getValue('crumbs_minimum_trail_items'))
+      ->set('crumbs_separator_span', $form_state->getValue('crumbs_separator_span'))
+      ->set('crumbs_separator', $form_state->getValue('crumbs_separator'))
+      ->set('crumbs_override_theme_breadcrumb', $form_state->getValue('crumbs_override_theme_breadcrumb'))
+      ->save();
 
   }
 

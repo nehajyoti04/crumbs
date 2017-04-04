@@ -20,7 +20,7 @@ crumbs.debug:
   path: 'admin/structure/crumbs/debug'
   defaults:
     _controller: '\Drupal\crumbs\Controller\CrumbsController::crumbsDebugPage'
-    _title: 'Debug'
+    _title: 'Crumbs debug'
   requirements:
     # Needs to be accessed by an anonymous user.
     _access: 'TRUE'
