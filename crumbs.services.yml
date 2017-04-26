@@ -1,0 +1,7 @@
+services:
+  crumbs_service_container:
+    class: Drupal\crumbs\lib\DIC\ServiceContainer
+
+  plugin.manager.crumbs:
+    class: Drupal\crumbs\crumbsPluginManager
+    parent: default_plugin_manager

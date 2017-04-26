@@ -1,4 +1,8 @@
 <?php
+use Drupal\crumbs;
+use Drupal\crumbs\crumbs_InjectedAPI_hookCrumbsPlugins;
+use Drupal\crumbs\lib\crumbsRouter;
+use Drupal\crumbs\lib\DIC\crumbs_DIC_ServiceContainer;
 
 /**
  * @file
@@ -14,6 +18,21 @@ define('CRUMBS_SHOW_CURRENT_PAGE_LINK', 9);
 if (!\Drupal::moduleHandler()->moduleExists('xautoload')) {
   spl_autoload_register('_crumbs_autoload');
 }
+
+
+/**
+ * A hook to register crumbs plugins.
+ *
+ * @param crumbs_InjectedAPI_hookCrumbsPlugins $api
+ *   An object with methods to register plugins.
+ *   See the class definition of crumbs_InjectedAPI_hookCrumbsPlugins, which
+ *   methods are available.
+ */
+function hook_crumbs_plugins(crumbs_InjectedAPI_hookCrumbsPlugins $api) {
+  $api->monoPlugin('something');
+  $api->multiPlugin('somethingElse');
+}
+
 
 
 /**
@@ -156,9 +175,9 @@ function crumbs_theme($existing, $type, $theme, $path) {
 // *
 // * @return null|string
 // */
-//function crumbs_reduce_path($path, $depth = -1) {
-//  return crumbs()->router->reducePath($path, $depth);
-//}
+function crumbs_reduce_path($path, $depth = -1) {
+  return crumbsRouter::reducePath($path, $depth);
+}
 //
 ///**
 // * Clean tokens so they are URL friendly.
@@ -179,25 +198,25 @@ function crumbs_theme($existing, $type, $theme, $path) {
 //// Service cache
 //// -----------------------------------------------------------------------------
 //
-/**
- * Get the service with the given key.
- * If it does not exist, it will be lazy-created with all its dependencies.
- *
- * @param string|null $key
- *   Optional service name.
- *
- * @return crumbs_DIC_ServiceContainer|object
- *   The service container, or a service obtained from the container.
- */
-function crumbs($key = NULL) {
-  static $services = NULL;
-  if (!isset($services)) {
-    $services = new crumbs_DIC_ServiceContainer();
-  }
-  if (isset($key)) {
-    return $services->__get($key);
-  }
-  else {
-    return $services;
-  }
-}
+///**
+// * Get the service with the given key.
+// * If it does not exist, it will be lazy-created with all its dependencies.
+// *
+// * @param string|null $key
+// *   Optional service name.
+// *
+// * @return crumbs_DIC_ServiceContainer|object
+// *   The service container, or a service obtained from the container.
+// */
+//function crumbs($key = NULL) {
+//  static $services = NULL;
+//  if (!isset($services)) {
+//    $services = new crumbs_DIC_ServiceContainer();
+//  }
+//  if (isset($key)) {
+//    return crumbs_DIC_ServiceContainer::__get($key);
+//  }
+//  else {
+//    return crumbs_DIC_ServiceContainer;
+//  }
+//}

@@ -23,7 +23,7 @@ function hook_crumbs_plugins($api) {
  * The methods defined here are all optional. We only use this interface for
  * documentation, no class actually implements it.
  */
-interface crumbs_MonoPlugin_example extends crumbs_MonoPlugin {
+interface crumbs_MonoPlugin_example extends MonoPlugin {
 
   /**
    * @param string $path
