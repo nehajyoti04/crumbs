@@ -1,5 +1,8 @@
 <?php
 
+namespace Drupal\crumbs\lib;
+use Drupal\crumbs\lib\InjectedAPI\crumbs_InjectedAPI_describeMultiPlugin;
+
 /**
  * Interface for plugin objects registered with hook_crumbs_plugins().
  *

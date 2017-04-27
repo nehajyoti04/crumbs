@@ -1,5 +1,8 @@
 <?php
 
+
+namespace Drupal\crumbs\lib\Multiplugin;
+
 class crumbs_MultiPlugin_EntityFindSomething extends crumbs_MultiPlugin_EntityFindAbstract {
 
   /**

@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\crumbs\lib\Container;
+
 /**
  * Container for lazy-initialized data.
  */

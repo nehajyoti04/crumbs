@@ -1,7 +1,6 @@
 <?php
 
-namespace Drupal\crumbs;
-
+namespace Drupal\crumbs\lib\Monoplugin;
 
 class crumbs_MonoPlugin_FixedParentPath implements crumbs_MonoPlugin_FindParentInterface {
 

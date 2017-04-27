@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\crumbs\lib\injectedAPI;
+namespace Drupal\crumbs\lib\InjectedAPI;
 
 /**
  * Injected API object for the describe() method of multi plugins.
  */
-class describeMultiPlugin {
+class crumbs_InjectedAPI_describeMultiPlugin {
 
   /**
    * @var crumbs_PluginOperation_describe

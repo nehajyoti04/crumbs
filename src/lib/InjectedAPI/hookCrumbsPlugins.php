@@ -1,19 +1,17 @@
 <?php
 
-namespace Drupal\crumbs\lib\injectedAPI;
-use Drupal\crumbs\lib\injectedAPI\Collection\CallbackCollection;
-use Drupal\crumbs\lib\injectedAPI\Collection\DefaultValueCollection;
-use Drupal\crumbs\lib\injectedAPI\Collection\EntityPluginCollection;
-use Drupal\crumbs\lib\injectedAPI\Collection\PluginCollection;
-use Drupal\crumbs\lib\MonoPlugin;
-use Drupal\crumbs\lib\PluginInterface;
-use Prophecy\Exception\Exception;
+namespace Drupal\crumbs\lib\InjectedAPI;
+use crumbs_EntityPlugin;
+use crumbs_InjectedAPI_Collection_CallbackCollection;
+use crumbs_InjectedAPI_Collection_DefaultValueCollection;
+use crumbs_InjectedAPI_Collection_EntityPluginCollection;
+use Drupal\crumbs\lib\InjectedAPI\crumbs_InjectedAPI_Collection_PluginCollection\crumbs_InjectedAPI_Collection_PluginCollection;
 
 /**
  * API object to be used as an argument for hook_crumbs_plugins()
  * This is a sandbox class, currently not used..
  */
-class hookCrumbsPlugins {
+class crumbs_InjectedAPI_hookCrumbsPlugins {
 
   /**
    * @var string $module
@@ -22,36 +20,36 @@ class hookCrumbsPlugins {
   private $module;
 
   /**
-   * @var PluginCollection
+   * @var crumbs_InjectedAPI_Collection_PluginCollection
    */
   private $pluginCollection;
 
   /**
-   * @var EntityPluginCollection
+   * @var crumbs_InjectedAPI_Collection_EntityPluginCollection
    */
   private $entityPluginCollection;
 
   /**
-   * @var CallbackCollection
+   * @var crumbs_InjectedAPI_Collection_CallbackCollection
    */
   private $callbackCollection;
 
   /**
-   * @var DefaultValueCollection
+   * @var crumbs_InjectedAPI_Collection_DefaultValueCollection
    */
   private $defaultValueCollection;
 
   /**
-   * @param PluginCollection $pluginCollection
-   * @param EntityPluginCollection $entityPluginCollection
-   * @param CallbackCollection $callbackCollection
-   * @param DefaultValueCollection $defaultValueCollection
+   * @param crumbs_InjectedAPI_Collection_PluginCollection $pluginCollection
+   * @param crumbs_InjectedAPI_Collection_EntityPluginCollection $entityPluginCollection
+   * @param crumbs_InjectedAPI_Collection_CallbackCollection $callbackCollection
+   * @param crumbs_InjectedAPI_Collection_DefaultValueCollection $defaultValueCollection
    */
   function __construct(
-    PluginCollection $pluginCollection,
-    EntityPluginCollection $entityPluginCollection,
-    CallbackCollection $callbackCollection,
-    DefaultValueCollection $defaultValueCollection
+    crumbs_InjectedAPI_Collection_PluginCollection $pluginCollection,
+    crumbs_InjectedAPI_Collection_EntityPluginCollection $entityPluginCollection,
+    crumbs_InjectedAPI_Collection_CallbackCollection $callbackCollection,
+    crumbs_InjectedAPI_Collection_DefaultValueCollection $defaultValueCollection
   ) {
     $this->pluginCollection = $pluginCollection;
     $this->entityPluginCollection = $entityPluginCollection;
@@ -181,13 +179,13 @@ class hookCrumbsPlugins {
    *
    * @param string $key
    *   Rule key, relative to module name.
-   * @param MonoPlugin $plugin
+   * @param Crumbs_MonoPlugin $plugin
    *   Plugin object. Needs to implement crumbs_MultiPlugin.
    *   Or NULL, to have the plugin object automatically created based on a
    *   class name guessed from the $key parameter and the module name.
    * @throws Exception
    */
-  function monoPlugin($key = NULL, MonoPlugin $plugin = NULL) {
+  function monoPlugin($key = NULL, crumbs_MonoPlugin $plugin = NULL) {
     $this->addPluginByType($plugin, $key, NULL, FALSE);
   }
 
@@ -196,9 +194,9 @@ class hookCrumbsPlugins {
    *
    * @param string $route
    * @param string $key
-   * @param MonoPlugin $plugin
+   * @param crumbs_MonoPlugin $plugin
    */
-  function routeMonoPlugin($route, $key = NULL, MonoPlugin $plugin = NULL) {
+  function routeMonoPlugin($route, $key = NULL, crumbs_MonoPlugin $plugin = NULL) {
     $this->addPluginByType($plugin, $key, $route, FALSE);
   }
 
@@ -224,12 +222,12 @@ class hookCrumbsPlugins {
    * @param string|null $key
    * @param crumbs_MultiPlugin|null $plugin
    */
-  function routeMultiPlugin($route, $key = NULL, MultiPlugin $plugin = NULL) {
+  function routeMultiPlugin($route, $key = NULL, crumbs_MultiPlugin $plugin = NULL) {
     $this->addPluginByType($plugin, $key, $route, TRUE);
   }
 
   /**
-   * @param MonoPlugin|PluginInterface|null $plugin
+   * @param crumbs_MonoPlugin|crumbs_PluginInterface|null $plugin
    * @param string|null $key
    * @param string|null $route
    * @param bool $is_multi
@@ -237,7 +235,7 @@ class hookCrumbsPlugins {
    *
    * @throws Exception
    */
-  private function addPluginByType(PluginInterface $plugin = NULL, $key = NULL, $route = NULL, $is_multi) {
+  private function addPluginByType(crumbs_PluginInterface $plugin = NULL, $key = NULL, $route = NULL, $is_multi) {
     $plugin_key = isset($key)
       ? $this->module . '.' . $key
       : $this->module;
@@ -255,12 +253,12 @@ class hookCrumbsPlugins {
       $class = get_class($plugin);
     }
     if ($is_multi) {
-      if (!$plugin instanceof crumbsMultiPlugin) {
+      if (!$plugin instanceof crumbs_MultiPlugin) {
         throw new Exception("$class must implement class_MultiPlugin.");
       }
     }
     else {
-      if (!$plugin instanceof crumbsMonoPlugin) {
+      if (!$plugin instanceof crumbs_MonoPlugin) {
         throw new Exception("$class must implement class_MonoPlugin.");
       }
     }

@@ -1,12 +1,14 @@
 <?php
 
+namespace Drupal\crumbs\lib\InjectedAPI\Collection;
 
-namespace Drupal\crumbs\lib\injectedAPI\Collection;
+use Drupal\crumbs\lib\crumbs_PluginInterface;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * @see crumbs_InjectedAPI_hookCrumbsPlugins
  */
-class PluginCollection {
+class crumbs_InjectedAPI_Collection_PluginCollection {
 
   /**
    * @var crumbs_PluginInterface[]

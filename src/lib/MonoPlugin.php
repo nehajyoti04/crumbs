@@ -1,14 +1,15 @@
 <?php
 
 namespace Drupal\crumbs\lib;
+use Drupal\crumbs\lib\InjectedAPI\crumbs_InjectedAPI_describeMonoPlugin;
 
 /**
  * Interface for plugin objects registered with hook_crumbs_plugins().
  */
-interface MonoPlugin extends PluginInterface {
+interface crumbs_MonoPlugin extends crumbs_PluginInterface {
 
   /**
-   * @param describeMonoPlugin $api
+   * @param crumbs_InjectedAPI_describeMonoPlugin $api
    *   Injected API object, with methods that allows the plugin to further
    *   describe itself.
    *

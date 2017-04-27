@@ -11,7 +11,9 @@ use Drupal\crumbs\crumbsPluginBase;
  *
  * @CrumbsAnnotation(
  *   id = "image",
- *   title = @Translation("Image")
+ *   title = @Translation("Image"),
+ *   name = @Translation("Chocolate"),
+ *   price = 1.75
  * )
  */
 class menuPlugin extends crumbsPluginBase {

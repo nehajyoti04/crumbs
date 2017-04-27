@@ -1,7 +1,21 @@
 services:
   crumbs_service_container:
-    class: Drupal\crumbs\lib\DIC\ServiceContainer
+    class: Drupal\crumbs\lib\DIC\crumbs_DIC_ServiceContainer
 
   plugin.manager.crumbs:
     class: Drupal\crumbs\crumbsPluginManager
     parent: default_plugin_manager
+
+  crumbs.injected_api.collection.callback_collection:
+    class: Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_CallbackCollection
+
+  crumbs.injected_api.collection.default_value_collection:
+    class: Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_DefaultValueCollection
+
+  crumbs.injected_api.collection.entity_plugin_collection:
+    class: Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_EntityPluginCollection
+
+  crumbs.injected_api.collection.entity_plugin_collection:
+      class: Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_PluginCollection
+
+

@@ -1,7 +1,17 @@
 <?php
 
 namespace Drupal\crumbs\lib\DIC;
-use Drupal\crumbs\crumbs_DIC_AbstractServiceContainer;
+
+use crumbs_CallbackRestoration;
+use crumbs_PluginSystem_PluginBag;
+use crumbs_PluginSystem_PluginEngine;
+use crumbs_PluginSystem_PluginInfo;
+use Drupal\crumbs\lib\crumbs_BreadcrumbBuilder;
+use Drupal\crumbs\lib\crumbs_CurrentPageInfo;
+use Drupal\crumbs\lib\crumbs_ParentFinder;
+use Drupal\crumbs\lib\crumbs_Router;
+use Drupal\crumbs\lib\crumbs_TrailCache;
+use Drupal\crumbs\lib\crumbs_TrailFinder;
 
 /**
  * Little brother of a dependency injection container (DIC)
@@ -17,7 +27,7 @@ use Drupal\crumbs\crumbs_DIC_AbstractServiceContainer;
  * @property crumbs_TrailCache $trails
  * @property crumbs_Router $router
  */
-class ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
+class crumbs_DIC_ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
 
   /**
    * A service that can build a breadcrumb from a trail.
@@ -26,7 +36,7 @@ class ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
    *
    * @see crumbs_DIC_ServiceContainer::$breadcrumbBuilder
    */
-  public function breadcrumbBuilder() {
+  protected function breadcrumbBuilder() {
     return new crumbs_BreadcrumbBuilder($this->pluginEngine);
   }
 
@@ -37,7 +47,7 @@ class ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
    *
    * @see crumbs_DIC_ServiceContainer::$trailFinder
    */
-  public function trailFinder() {
+  protected function trailFinder() {
     return new crumbs_TrailFinder($this->parentFinder, $this->router);
   }
 
@@ -48,7 +58,7 @@ class ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
    *
    * @see crumbs_DIC_ServiceContainer::$parentFinder
    */
-  public function parentFinder() {
+  protected function parentFinder() {
     return new crumbs_ParentFinder($this->pluginEngine, $this->router);
   }
 
@@ -57,7 +67,7 @@ class ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
    *
    * @see crumbs_DIC_ServiceContainer::$pluginBag
    */
-  public function pluginBag() {
+  protected function pluginBag() {
     $pluginInfo = $this->pluginInfo;
     return new crumbs_PluginSystem_PluginBag(
       $pluginInfo->plugins,
@@ -73,7 +83,7 @@ class ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
    *
    * @see crumbs_DIC_ServiceContainer::$pluginEngine
    */
-  public function pluginEngine() {
+  protected function pluginEngine() {
     return new crumbs_PluginSystem_PluginEngine(
       $this->pluginBag,
       $this->router,
@@ -85,7 +95,7 @@ class ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
    *
    * @see crumbs_DIC_ServiceContainer::$callbackRestoration
    */
-  public function callbackRestoration() {
+  protected function callbackRestoration() {
     return new crumbs_CallbackRestoration();
   }
 
@@ -96,7 +106,7 @@ class ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
    *
    * @see crumbs_DIC_ServiceContainer::$pluginInfo
    */
-  public function pluginInfo() {
+  protected function pluginInfo() {
     return new crumbs_PluginSystem_PluginInfo();
   }
 
@@ -107,7 +117,7 @@ class ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
    *
    * @see crumbs_DIC_ServiceContainer::$page
    */
-  public function page() {
+  protected function page() {
     return new crumbs_CurrentPageInfo(
       $this->trails,
       $this->breadcrumbBuilder,
@@ -121,7 +131,7 @@ class ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
    *
    * @see crumbs_DIC_ServiceContainer::$trails
    */
-  public function trails() {
+  protected function trails() {
     return new crumbs_TrailCache($this->trailFinder);
   }
 
@@ -132,7 +142,7 @@ class ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
    *
    * @see crumbs_DIC_ServiceContainer::$router
    */
-  public function router() {
+  protected function router() {
     return new crumbs_Router();
   }
 

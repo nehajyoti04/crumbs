@@ -1,4 +1,6 @@
 <?php
+use Drupal\crumbs\lib\InjectedAPI\crumbs_InjectedAPI_Collection_PluginCollection;
+use Drupal\crumbs\lib\InjectedAPI\crumbs_InjectedAPI_hookCrumbsPlugins;
 
 /**
  * Can recover anonymous functions registered with hook_crumbs_plugins() via

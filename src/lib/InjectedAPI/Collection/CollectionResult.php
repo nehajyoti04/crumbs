@@ -1,29 +1,29 @@
 <?php
 
-namespace Drupal\crumbs\lib\injectedAPI\Collection;
+namespace Drupal\crumbs\lib\InjectedAPI\Collection;
 
 /**
  * Represents the result of hook_crumbs_plugins()
  */
-class CollectionResult {
+class crumbs_InjectedAPI_Collection_CollectionResult {
 
   /**
-   * @var PluginCollection
+   * @var crumbs_InjectedAPI_Collection_PluginCollection
    */
   private $pluginCollection;
 
   /**
-   * @var DefaultValueCollection
+   * @var crumbs_InjectedAPI_Collection_DefaultValueCollection
    */
   private $defaultValueCollection;
 
   /**
-   * @param PluginCollection $pluginCollection
-   * @param DefaultValueCollection $defaultValueCollection
+   * @param crumbs_InjectedAPI_Collection_PluginCollection $pluginCollection
+   * @param crumbs_InjectedAPI_Collection_DefaultValueCollection $defaultValueCollection
    */
   function __construct(
-    PluginCollection $pluginCollection,
-    DefaultValueCollection $defaultValueCollection
+    crumbs_InjectedAPI_Collection_PluginCollection $pluginCollection,
+    crumbs_InjectedAPI_Collection_DefaultValueCollection $defaultValueCollection
   ) {
     $this->pluginCollection = $pluginCollection;
     $this->defaultValueCollection = $defaultValueCollection;

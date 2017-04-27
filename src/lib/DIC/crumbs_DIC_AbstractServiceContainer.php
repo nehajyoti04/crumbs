@@ -1,5 +1,6 @@
 <?php
-namespace Drupal\crumbs;
+
+namespace Drupal\crumbs\lib\DIC;
 
 /**
  * Dependency injection container for lazy-instantiated services.
@@ -43,4 +44,4 @@ abstract class crumbs_DIC_AbstractServiceContainer {
     return $this->$method();
   }
 
-}
+} 

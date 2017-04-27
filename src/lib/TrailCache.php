@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\crumbs\lib;
+
 /**
  * Class crumbs_Container_LazyTrails
  */

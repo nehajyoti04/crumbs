@@ -1,7 +1,5 @@
 <?php
 
-namespace Drupal\crumbs\lib\EntityPlugin\Field;
-
 class crumbs_EntityPlugin_Field_NodeReference extends crumbs_EntityPlugin_Field_Abstract {
 
   /**
@@ -11,7 +9,7 @@ class crumbs_EntityPlugin_Field_NodeReference extends crumbs_EntityPlugin_Field_
     foreach ($items as $item) {
       if (1
         && !empty($item['nid'])
-        && ($target_node = \Drupal::entityManager()->getStorage('node')->load($item['nid']))
+        && ($target_node = node_load($item['nid']))
         && ($uri = entity_uri('node', $target_node))
       ) {
         return $uri['path'];

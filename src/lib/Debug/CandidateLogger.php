@@ -79,9 +79,9 @@ class crumbs_Debug_CandidateLogger {
               $value = '(FALSE)';
             }
             else {
-              $value = \Drupal\Component\Utility\SafeMarkup::checkPlain($candidate['raw']);
+              $value = check_plain($candidate['raw']);
               if ($candidate['processed'] !== $candidate['raw']) {
-                $value .= '<br/>->' . \Drupal\Component\Utility\SafeMarkup::checkPlain($candidate['processed']);
+                $value .= '<br/>->' . check_plain($candidate['processed']);
               }
             }
             $rows[$key][$info['path'] . ':' . $type] = $value;

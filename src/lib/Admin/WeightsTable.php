@@ -1,15 +1,12 @@
 <?php
 
-namespace Drupal\crumbs\Admin\crumbs_Admin_WeightsTable;
-use Drupal\crumbs\lib\PluginSystem\PluginInfo;
-
 /**
  * This class is a helper for theme_crumbs_weights_tabledrag()
  */
 class crumbs_Admin_WeightsTable {
 
   /**
-   * @var PluginInfo
+   * @var crumbs_PluginSystem_PluginInfo
    */
   protected $pluginInfo;
 
@@ -29,7 +26,7 @@ class crumbs_Admin_WeightsTable {
   protected $descriptions = array();
 
   /**
-   * @param PluginInfo $plugin_info
+   * @param crumbs_PluginSystem_PluginInfo $plugin_info
    */
   function __construct($plugin_info) {
     $this->pluginInfo = $plugin_info;
@@ -152,7 +149,7 @@ class crumbs_Admin_WeightsTable {
     $title = $child['#title'];
     unset($child['#description']);
     unset($child['#title']);
-    $header = '<h3>' . $title . '</h3>' . \Drupal::service("renderer")->render($child);
+    $header = '<h3>' . $title . '</h3>' . drupal_render($child);
     $this->sections[$section_key][$key]['data'][]['data'] = $header;
   }
 
@@ -170,7 +167,7 @@ class crumbs_Admin_WeightsTable {
     unset($child['#title']);
     $cells = array(
       '<code>' . $title . '</code>  ',
-      \Drupal::service("renderer")->render($child),
+      drupal_render($child),
     );
 
     $this->rowAddMethodInfo($cells, $meta);

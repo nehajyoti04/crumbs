@@ -1,5 +1,7 @@
 <?php
+namespace Drupal\crumbs\lib;
 
+use crumbs_PluginSystem_PluginEngine;
 
 class crumbs_BreadcrumbBuilder {
 

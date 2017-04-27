@@ -1,8 +1,5 @@
 <?php
 
-
-namespace Drupal\crumbs\lib\EntityPlugin\Field;
-
 abstract class crumbs_EntityPlugin_Field_Abstract implements crumbs_EntityPlugin {
 
   /**

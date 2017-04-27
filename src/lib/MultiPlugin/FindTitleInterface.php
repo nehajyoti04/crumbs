@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\crumbs\lib\Multiplugin;
+
 interface crumbs_MultiPlugin_FindTitleInterface extends crumbs_MultiPlugin {
 
   /**

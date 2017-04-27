@@ -2,6 +2,6 @@
 
 namespace Drupal\crumbs\lib;
 
-interface PluginInterface {
+interface crumbs_PluginInterface {
 
 }

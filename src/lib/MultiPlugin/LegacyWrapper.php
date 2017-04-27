@@ -1,5 +1,6 @@
 <?php
 
+namespace Drupal\crumbs\lib\Multiplugin;
 /**
  * A wrapper for legacy plugins with suffixed methods like findTitle__node_x().
  */

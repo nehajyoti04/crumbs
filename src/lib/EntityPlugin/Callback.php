@@ -1,9 +1,5 @@
 <?php
 
-namespace Drupal\crumbs\lib\EntityPlugin;
-
-use crumbs_EntityPlugin;
-
 class crumbs_EntityPlugin_Callback implements crumbs_EntityPlugin {
 
   /**

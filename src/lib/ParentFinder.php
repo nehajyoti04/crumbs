@@ -1,5 +1,8 @@
 <?php
 
+namespace Drupal\crumbs\lib;
+use crumbs_PluginSystem_PluginEngine;
+use crumbs_Router;
 
 /**
  * Can find a parent path for a given path.

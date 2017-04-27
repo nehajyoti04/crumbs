@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\crumbs\lib\Monoplugin;
+
 class crumbs_MonoPlugin_TranslateTitle implements crumbs_MonoPlugin_FindTitleInterface {
 
   /**

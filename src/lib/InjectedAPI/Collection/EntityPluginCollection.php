@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\crumbs\lib\injectedAPI\Collection;
+namespace Drupal\crumbs\lib\InjectedAPI\Collection;
 
 /**
  * @see crumbs_InjectedAPI_hookCrumbsPlugins
  */
-class EntityPluginCollection {
+class crumbs_InjectedAPI_Collection_EntityPluginCollection {
 
   /**
    * @var array
@@ -22,9 +22,9 @@ class EntityPluginCollection {
   protected $entityPlugins = array();
 
   /**
-   * @param PluginCollection $pluginCollection
+   * @param crumbs_InjectedAPI_Collection_PluginCollection $pluginCollection
    */
-  function finalize(PluginCollection $pluginCollection) {
+  function finalize(crumbs_InjectedAPI_Collection_PluginCollection $pluginCollection) {
     $build = array();
     foreach ($this->entityPlugins as $type => $plugins) {
       foreach ($plugins as $key => $y) {

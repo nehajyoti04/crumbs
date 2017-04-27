@@ -1,5 +1,6 @@
 <?php
 
+namespace Drupal\crumbs\lib\Container;
 
 class crumbs_Container_ContainerUtil {
 

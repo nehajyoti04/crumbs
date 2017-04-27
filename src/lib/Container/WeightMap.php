@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\crumbs\lib\Container;
+
 /**
  * Can determine a weight for a rule key based on wildcard weights.
  *

@@ -1,11 +1,5 @@
 <?php
 
-
-namespace Drupal\crumbs\lib\PluginSystem;
-use crumbs_UnserializeException;
-use Drupal\crumbs\crumbs_Container_AbstractLazyDataCached;
-use Drupal\crumbs\crumbs_Container_WeightMap;
-
 /**
  * Info about available plugins and their weights.
  *
@@ -43,7 +37,7 @@ use Drupal\crumbs\crumbs_Container_WeightMap;
  * @property array $pluginsSorted
  * @property bool $includePluginFiles
  */
-class PluginInfo extends crumbs_Container_AbstractLazyDataCached {
+class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCached {
 
   /**
    * Which keys to load from persistent cache.
@@ -230,11 +224,11 @@ class PluginInfo extends crumbs_Container_AbstractLazyDataCached {
    * @see crumbs_PluginSystem_PluginInfo::$userWeights
    */
   protected function get_userWeights() {
-    // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/crumbs.settings.yml and config/schema/crumbs.schema.yml.
-$user_weights = \Drupal::config('crumbs.settings')->get('crumbs_weights');
+    $user_weights = variable_get('crumbs_weights', array(
+      // The user expects the crumbs.home_title plugin to be dominant.
+      // @todo There must be a better way to do this.
+      'crumbs.home_title' => 0,
+    ));
     // '*' always needs to be set.
     if (!isset($user_weights['*'])) {
       // Put '*' last.
@@ -372,7 +366,7 @@ $user_weights = \Drupal::config('crumbs.settings')->get('crumbs_weights');
       new crumbs_InjectedAPI_Collection_CallbackCollection,
       $defaultValueCollection = new crumbs_InjectedAPI_Collection_DefaultValueCollection);
 
-    foreach (\Drupal::moduleHandler()->getImplementations('crumbs_plugins') as $module) {
+    foreach (module_implements('crumbs_plugins') as $module) {
       $function = $module .'_crumbs_plugins';
       $api->setModule($module);
       $function($api);
@@ -460,7 +454,7 @@ $user_weights = \Drupal::config('crumbs.settings')->get('crumbs_weights');
     $files = array();
     foreach (scandir($dir) as $candidate) {
       if (preg_match('/^crumbs\.(.+)\.inc$/', $candidate, $m)) {
-        if (\Drupal::moduleHandler()->moduleExists($m[1])) {
+        if (module_exists($m[1])) {
           $files[$m[1]] = $dir . '/' . $candidate;
         }
       }

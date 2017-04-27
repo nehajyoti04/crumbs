@@ -1,5 +1,10 @@
 <?php
 
+
+namespace Drupal\crumbs\lib\Multiplugin;
+
+use crumbs_MultiPlugin_FindTitleInterface;
+
 class crumbs_MultiPlugin_EntityTitle extends crumbs_MultiPlugin_EntityFindSomething implements crumbs_MultiPlugin_FindTitleInterface {
 
   /**

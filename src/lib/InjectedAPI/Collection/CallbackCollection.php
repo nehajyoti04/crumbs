@@ -1,10 +1,11 @@
 <?php
 
-namespace Drupal\crumbs\lib\injectedAPI\Collection;
+namespace Drupal\crumbs\lib\InjectedAPI\Collection;
+
 /**
  * @see crumbs_InjectedAPI_hookCrumbsPlugins
  */
-class CallbackCollection {
+class crumbs_InjectedAPI_Collection_CallbackCollection {
 
   /**
    * @var callback[][][]

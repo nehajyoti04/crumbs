@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\crumbs\lib\Multiplugin;
+
 class crumbs_MultiPlugin_EntityParent extends crumbs_MultiPlugin_EntityFindSomething implements crumbs_MultiPlugin_FindParentInterface {
 
   /**

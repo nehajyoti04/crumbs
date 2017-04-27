@@ -1,5 +1,6 @@
 <?php
 
+namespace Drupal\crumbs\lib;
 
 class crumbs_TrailFinder {
 
@@ -82,10 +83,10 @@ class crumbs_TrailFinder {
     else {
       $message_raw = 'Your current setting for !site_frontpage seems to be invalid.';
       $message_replacements = array(
-        '!site_frontpage' => '<em>' . \Drupal::l(t('Default front page'), \Drupal\Core\Url::fromRoute('system.site_information_settings')) . '</em>',
+        '!site_frontpage' => '<em>' . l(t('Default front page'), 'admin/config/system/site-information') . '</em>',
       );
-      \Drupal::logger('crumbs')->notice($message_raw, []);
-      if (\Drupal::currentUser()->hasPermission('administer site configuration')) {
+      watchdog('crumbs', $message_raw, $message_replacements);
+      if (user_access('administer site configuration')) {
         drupal_set_message(t($message_raw, $message_replacements), 'warning');
       }
     }

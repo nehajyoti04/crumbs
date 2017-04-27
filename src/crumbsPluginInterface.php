@@ -74,4 +74,24 @@ interface crumbsPluginInterface {
    */
   public function getOutput();
 
+
+  /**
+   * Return the name of the ice cream flavor.
+   *
+   * @return string
+   */
+  public function getName();
+  /**
+   * Return the price per scoop of the ice cream flavor.
+   *
+   * @return float
+   */
+  public function getPrice();
+  /**
+   * A slogan for the ice cream flavor.
+   *
+   * @return string
+   */
+  public function slogan();
+
 }

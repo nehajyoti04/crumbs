@@ -4,8 +4,8 @@ namespace Drupal\crumbs\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\crumbs\lib\DIC\ServiceContainer;
-use Drupal\crumbs\lib\PluginSystem\PluginInfo;
+use Drupal\crumbs\crumbsPluginManager;
+use Drupal\crumbs\lib\DIC\crumbs_DIC_ServiceContainer;
 use Drupal\crumbs\Plugin\Crumbs\menuPlugin;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -20,11 +20,13 @@ class AdminWeightForm extends ConfigFormBase {
 //    $this->pluginInfo = $pluginInfo;
 //  }
 
-protected $serviceContainer;
+  protected $serviceContainer;
+  protected $crumbsPluginManager;
 
-public function __construct(ServiceContainer $serviceContainer){
-$this->serviceContainer = $serviceContainer;
-}
+  public function __construct(crumbs_DIC_ServiceContainer $serviceContainer, crumbsPluginManager $crumbsPluginManager){
+    $this->serviceContainer = $serviceContainer;
+    $this->crumbsPluginManager = $crumbsPluginManager;
+  }
 
   /**
    * {@inheritdoc}
@@ -34,7 +36,8 @@ $this->serviceContainer = $serviceContainer;
     return new static(
     // Load the service required to construct this class.
 //    $serviceContainer->pluginInfo();
-      $container->get('crumbs_service_container')
+      $container->get('crumbs_service_container'),
+      $container->get('plugin.manager.crumbs')
     );
   }
 
@@ -62,7 +65,28 @@ $this->serviceContainer = $serviceContainer;
     $form = array();
     $output = menuPlugin::getOutput();
     print '<pre>'; print_r("output here"); print '</pre>';
-    print '<pre>'; print_r($output); print '</pre>';exit;
+    print '<pre>'; print_r($output); print '</pre>';
+
+
+    $manager = $this->crumbsPluginManager;
+    $plugins = $manager->getDefinitions();
+//    drupal_set_message("plugins");
+//    drupal_set_message(print_r($plugins, TRUE));
+    foreach ($plugins as $flavor) {
+//      print '<pre>'; print_r("flavor"); print '</pre>';
+//      print '<pre>'; print_r($flavor); print '</pre>';
+      $instance = $manager->createInstance($flavor['id']);
+//      print '<pre>'; print_r("instance"); print '</pre>';
+//      print '<pre>'; print_r($instance); print '</pre>';
+      $build[] = array(
+        '#type' => 'markup',
+        '#markup' => t('<p>Flavor @name, cost $@price.</p>', array('@name' => $instance->getName(), '@price' => $instance->getPrice())),
+      );
+    }
+    return $build;
+
+
+
 
 //    $info = ServiceContainer::pluginInfo;
 //    kint("info");

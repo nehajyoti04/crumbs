@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\crumbs\lib\MonoPlugin;
+namespace Drupal\crumbs\lib\Monoplugin;
 
-interface crumbs_MonoPlugin_FindTitleInterface extends MonoPlugin {
+interface crumbs_MonoPlugin_FindTitleInterface extends crumbs_MonoPlugin {
 
   /**
    * Find candidates for the parent path.

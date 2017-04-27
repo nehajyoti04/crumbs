@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\Core\Cache\Cache;
+namespace Drupal\crumbs\lib\Container;
 
 abstract class crumbs_Container_AbstractLazyDataCached {
 
@@ -36,8 +36,7 @@ abstract class crumbs_Container_AbstractLazyDataCached {
    */
   function flushCaches() {
     $this->data = array();
-//    cache_clear_all('crumbs:', 'cache', TRUE);
-    Cache::invalidateTags(array('rendered'));
+    cache_clear_all('crumbs:', 'cache', TRUE);
   }
 
   /**
@@ -67,7 +66,7 @@ abstract class crumbs_Container_AbstractLazyDataCached {
    * @throws Exception
    */
   private function getCached($key) {
-    $cache = \Drupal::cache()->get("crumbs:$key");
+    $cache = cache_get("crumbs:$key");
     if (isset($cache->data)) {
       // We do the serialization manually,
       // to prevent Drupal from intercepting exceptions.
@@ -82,7 +81,7 @@ abstract class crumbs_Container_AbstractLazyDataCached {
     if (!is_array($data)) {
       throw new Exception("Only arrays can be cached in crumbs_CachedLazyPluginInfo.");
     }
-    \Drupal::cache()->set("crumbs:$key", serialize($data));
+    cache_set("crumbs:$key", serialize($data));
     return $data;
   }
 

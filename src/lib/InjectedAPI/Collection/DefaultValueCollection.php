@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\crumbs\lib\injectedAPI\Collection;
+namespace Drupal\crumbs\lib\InjectedAPI\Collection;
 
-use Prophecy\Exception\Exception;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
-class DefaultValueCollection {
+class crumbs_InjectedAPI_Collection_DefaultValueCollection {
 
   /**
    * Default weights for some plugin keys.

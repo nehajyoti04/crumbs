@@ -1,5 +1,8 @@
 <?php
 
+namespace Drupal\crumbs\lib;
+use Drupal\crumbs\lib\InjectedAPI\crumbs_InjectedAPI_describeMultiPlugin;
+
 /**
  * Interface for entity title plugins registered with hook_crumbs_plugins().
  */

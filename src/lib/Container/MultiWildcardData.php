@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\crumbs\lib\Container;
+
 /**
  * @property crumbs_Container_WildcardData|array $basicMethods
  * @property crumbs_Container_WildcardData|array $routeMethods

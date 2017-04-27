@@ -1,11 +1,10 @@
 <?php
 
-namespace Drupal\crumbs\lib\injectedAPI;
-
+namespace Drupal\crumbs\lib\InjectedAPI;
 /**
  * Injected API object for the describe() method of mono plugins.
  */
-class describeMonoPlugin {
+class crumbs_InjectedAPI_describeMonoPlugin {
 
   /**
    * @var crumbs_PluginOperation_describe

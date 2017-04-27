@@ -1,5 +1,6 @@
 <?php
 
+namespace Drupal\crumbs\lib\CrumbsEntityPlugin;
 
 class crumbs_CrumbsEntityPlugin_TokenDisabled implements crumbs_EntityPlugin {
 
@@ -7,19 +8,14 @@ class crumbs_CrumbsEntityPlugin_TokenDisabled implements crumbs_EntityPlugin {
    * {@inheritdoc}
    */
   function describe($api, $entity_type, $keys) {
-    // @FIXME
-// // @FIXME
-// // The correct configuration object could not be determined. You'll need to
-// // rewrite this call manually.
-// $patterns = variable_get('crumbs_' . $entity_type . '_parent_patterns', array());
-
+    $patterns = variable_get('crumbs_' . $entity_type . '_parent_patterns', array());
     foreach ($keys as $key => $title) {
       if (empty($patterns[$key])) {
         unset($keys[$key]);
       }
       else {
         $api->addRule($key, $title);
-        $api->descWithLabel('"' . \Drupal\Component\Utility\SafeMarkup::checkPlain($patterns[$key]) . '"', t('Parent'), $key);
+        $api->descWithLabel('"' . check_plain($patterns[$key]) . '"', t('Parent'), $key);
       }
     }
   }
@@ -30,12 +26,7 @@ class crumbs_CrumbsEntityPlugin_TokenDisabled implements crumbs_EntityPlugin {
   function entityFindCandidate($entity, $entity_type, $distinction_key) {
 
     // This is cached..
-    // @FIXME
-// // @FIXME
-// // The correct configuration object could not be determined. You'll need to
-// // rewrite this call manually.
-// $patterns = variable_get('crumbs_' . $entity_type . '_parent_patterns', array());
-
+    $patterns = variable_get('crumbs_' . $entity_type . '_parent_patterns', array());
 
     if (!empty($patterns[$distinction_key])) {
       $parent = $patterns[$distinction_key];

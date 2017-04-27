@@ -1,10 +1,11 @@
 <?php
 
 namespace Drupal\crumbs\lib;
+
 /**
  * Wrapper for routing-related Drupal core functions.
  */
-class crumbsRouter {
+class crumbs_Router {
 
   /**
    * @var string
@@ -27,14 +28,7 @@ class crumbsRouter {
   function getRouterItem($path) {
     $normalpath = drupal_get_normal_path($path);
     try {
-      // @FIXME
-// menu_get_item() has been removed. To retrieve route information, use the
-// RouteMatch object, which you can retrieve by calling \Drupal::routeMatch().
-// 
-// 
-// @see https://www.drupal.org/node/2203305
-// $item = menu_get_item($normalpath);
-
+      $item = menu_get_item($normalpath);
     }
     catch (Exception $e) {
       // Some modules throw an exception, if a path has unloadable arguments.
@@ -83,7 +77,7 @@ class crumbsRouter {
    *
    * @return string|null
    */
-  public function reducePath($path, $depth = -1) {
+  function reducePath($path, $depth = -1) {
     $fragments = explode('/', $path);
     while (count($fragments) > 1 && $depth !== 0) {
       array_pop($fragments);
@@ -114,7 +108,7 @@ class crumbsRouter {
    *   TRUE, if external path.
    */
   function urlIsExternal($url) {
-    return \Drupal\Component\Utility\UrlHelper::isExternal($url);
+    return url_is_external($url);
   }
 
   /**
@@ -124,12 +118,7 @@ class crumbsRouter {
     if (isset($this->frontNormalPath)) {
       return $this->frontNormalPath;
     }
-    // @FIXME
-// // @FIXME
-// // This looks like another module's variable. You'll need to rewrite this call
-// // to ensure that it uses the correct configuration object.
-// return $this->frontNormalPath = drupal_get_normal_path(variable_get('site_frontpage', 'node'));
-
+    return $this->frontNormalPath = drupal_get_normal_path(variable_get('site_frontpage', 'node'));
   }
 
 }

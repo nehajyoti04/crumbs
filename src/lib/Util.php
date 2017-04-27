@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\crumbs\lib;
+
 /**
  * Static methods that don't fit elsewhere.
  * Ideally these are all stateless and do not depend on anything. But at least
@@ -111,7 +113,7 @@ class crumbs_Util {
     if ($item['map'][$index] instanceof stdClass) {
       return $item['map'][$index];
     }
-    $entities = \Drupal::entityManager()->getStorage($entity_type, array($item['original_map'][$index]));
+    $entities = entity_load($entity_type, array($item['original_map'][$index]));
     return reset($entities);
   }
 }

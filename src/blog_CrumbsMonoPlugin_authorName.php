@@ -1,6 +1,8 @@
 <?php
 namespace Drupal\crumbs;
 
+use crumbs_MonoPlugin;
+
 class blog_CrumbsMonoPlugin_authorName implements crumbs_MonoPlugin {
 
   /**

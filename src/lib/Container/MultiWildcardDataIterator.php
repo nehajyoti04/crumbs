@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\crumbs\lib\Container;
+
 class crumbs_Container_MultiWildcardDataIterator extends ArrayIterator {
 
   /**
