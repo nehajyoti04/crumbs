@@ -1,7 +1,9 @@
 <?php
 namespace Drupal\crumbs;
 
-use crumbs_MultiPlugin_FindParentInterface;
+
+
+use Drupal\crumbs\lib\Multiplugin\crumbs_MultiPlugin_FindParentInterface;
 
 class menu_CrumbsMultiPlugin_hierarchy implements crumbs_MultiPlugin_FindParentInterface {
 
@@ -19,6 +21,7 @@ class menu_CrumbsMultiPlugin_hierarchy implements crumbs_MultiPlugin_FindParentI
    * {@inheritdoc}
    */
   function findParent($path, $item) {
+    print '<pre>'; print_r("menu - Hierarchy - inside parent path"); print '</pre>';
     // Support for special_menu_items module.
     /* @see crumbs_menu() */
     /* @see menu_link_load() */
@@ -39,7 +42,7 @@ class menu_CrumbsMultiPlugin_hierarchy implements crumbs_MultiPlugin_FindParentI
       // The 'language' column only exists if i18n_menu is installed.
       // (See i18n_menu_install())
       $language = \Drupal\Core\Language\Language::LANGCODE_NOT_SPECIFIED;
-      if (isset(\Drupal::languageManager()->getCurrentLanguage())) {
+      if (isset(\Drupal::languageManager()->getCurrentLanguage()->language)) {
         $language = array($language, \Drupal::languageManager()->getCurrentLanguage()->language);
       }
       $q->condition('child.language', $language);
@@ -67,6 +70,8 @@ class menu_CrumbsMultiPlugin_hierarchy implements crumbs_MultiPlugin_FindParentI
     }
 
     // Filter out NULL values for toplevel items.
+    print '<pre>'; print_r("menu - Hierarchy - candidates"); print '</pre>';
+
     return array_filter($candidates);
   }
 

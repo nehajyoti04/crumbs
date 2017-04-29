@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\crumbs;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 
 /**
  * Defines an interface for tour items.
@@ -10,7 +11,7 @@ namespace Drupal\crumbs;
  * @see \Drupal\crumbs\crumbsPluginManager
  * @see plugin_api
  */
-interface crumbsPluginInterface {
+interface crumbsPluginInterface extends ContainerFactoryPluginInterface  {
 
   /**
    * Returns id of the tip.

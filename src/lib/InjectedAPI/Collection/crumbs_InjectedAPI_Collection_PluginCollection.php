@@ -2,7 +2,9 @@
 
 namespace Drupal\crumbs\lib\InjectedAPI\Collection;
 
+use Drupal\crumbs\lib\crumbs_MultiPlugin;
 use Drupal\crumbs\lib\crumbs_PluginInterface;
+use ReflectionObject;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**

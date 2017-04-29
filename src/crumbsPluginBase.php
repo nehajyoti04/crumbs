@@ -2,7 +2,9 @@
 
 namespace Drupal\crumbs;
 
+use crumbs_EntityPlugin_Callback;
 use crumbs_MonoPlugin_ParentPathCallback;
+use Drupal\Core\Form\FormBuilder;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\crumbs\lib\crumbs_EntityPlugin;
 use Drupal\crumbs\lib\crumbs_MonoPlugin;
@@ -18,6 +20,7 @@ use Drupal\crumbs\lib\Monoplugin\crumbs_MonoPlugin_TitleCallback;
 use Drupal\crumbs\lib\Monoplugin\crumbs_MonoPlugin_TranslateTitle;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\crumbs\menu_CrumbsMultiPlugin_hierarchy;
 
 /**
  * Defines a base tour item implementation.
@@ -86,6 +89,14 @@ abstract class crumbsPluginBase extends PluginBase implements crumbsPluginInterf
       return $this->configuration[$key];
     }
   }
+  /**
+   * {@inheritdoc}
+   */
+//  public function get($key) {
+//    if (!empty($this->pluginDefinition["key"])) {
+//      return $this->pluginDefinition["key"];
+//    }
+//  }
 
   /**
    * {@inheritdoc}
@@ -104,6 +115,58 @@ abstract class crumbsPluginBase extends PluginBase implements crumbsPluginInterf
     return t('Best flavor ever.');
   }
 
+  public function multipluginKey() {
+    return $this->pluginDefinition['multipluginKey'];
+  }
+
+//  public function getApi(){
+//    return $this->pluginDefinition['api'];
+//  }
+
+  public function getDisabledByDefaultKey(){
+    return $this->pluginDefinition['disabled_by_default_key'];
+  }
+
+
+//  function customsetDefaultValue($key, $value) {
+//    $this->defaultValues[$key] = $value;
+//    print '<pre>'; print_r("default values - key - value"); print '</pre>';
+//    print '<pre>'; print_r($key . " ". $value ); print '</pre>';
+//  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function custom_monoplugin_describe() {
+    $home_title = \Drupal::state()->get('crumbs_home_link_title', 'Home');
+//    print '<pre>'; print_r("mono plugin describe"); print '</pre>';
+//    print '<pre>'; print_r($home_title); print '</pre>';
+    return t('Set t("@title") as the title for the root item.', array(
+      '@title' => $home_title,
+    ));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function custom_monoplugin_findTitle($path, $item) {
+    if ('<front>' === $item['href']) {
+      $home_title = \Drupal::state()->get('crumbs_home_link_title', 'Home');
+      return t($home_title);
+    }
+
+    return NULL;
+  }
+
+  function custom_monoplugin_key(){
+    return $this->pluginDefinition['monoplugin_key'];
+  }
+
+
+
+
+
 
 
 
@@ -118,7 +181,7 @@ abstract class crumbsPluginBase extends PluginBase implements crumbsPluginInterf
   /**
    * @var crumbs_InjectedAPI_Collection_PluginCollection
    */
-  private $pluginCollection;
+  protected $pluginCollection;
 
   /**
    * @var crumbs_InjectedAPI_Collection_EntityPluginCollection
@@ -133,7 +196,7 @@ abstract class crumbsPluginBase extends PluginBase implements crumbsPluginInterf
   /**
    * @var crumbs_InjectedAPI_Collection_DefaultValueCollection
    */
-  private $defaultValueCollection;
+  public $defaultValueCollection;
 
 //  /**
 //   * @param crumbs_InjectedAPI_Collection_PluginCollection $pluginCollection
@@ -167,6 +230,111 @@ abstract class crumbsPluginBase extends PluginBase implements crumbsPluginInterf
 //  }
 
 
+//  /**
+//   * @param crumbs_InjectedAPI_Collection_DefaultValueCollection $defaultValueCollection
+//   */
+//  function __construct(
+//    crumbs_InjectedAPI_Collection_DefaultValueCollection $defaultValueCollection
+//  ) {
+//    $this->defaultValueCollection = $defaultValueCollection;
+//  }
+
+
+//
+//
+//  /**
+//   * {@inheritdoc}
+//   */
+//  public function __construct(array $configuration, $plugin_id, $plugin_definition
+//                              ) {
+//    parent::__construct($configuration, $plugin_id, $plugin_definition);
+//
+//  }
+//
+//  /**
+//   * {@inheritdoc}
+//   */
+//  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+//    return new static(
+//      $configuration,
+//      $plugin_id,
+//      $plugin_definition
+////      $container->get('crumbs.injected_api.collection.plugin_collection'),
+////      $container->get('crumbs.injected_api.collection.entity_plugin_collection'),
+////      $container->get('crumbs.injected_api.collection.callback_collection'),
+////      $container->get('crumbs.injected_api.collection.default_value_collection')
+//    );
+//  }
+
+
+//  /**
+//   * {@inheritdoc}
+//   */
+//  public function __construct(array $configuration, $plugin_id, $plugin_definition,
+//                              crumbs_InjectedAPI_Collection_PluginCollection $pluginCollection,
+//                              crumbs_InjectedAPI_Collection_EntityPluginCollection $entityPluginCollection,
+//                              crumbs_InjectedAPI_Collection_CallbackCollection $callbackCollection,
+//                              crumbs_InjectedAPI_Collection_DefaultValueCollection $defaultValueCollection) {
+//    parent::__construct($configuration, $plugin_id, $plugin_definition);
+//    $this->pluginCollection = $pluginCollection;
+//    $this->entityPluginCollection = $entityPluginCollection;
+//    $this->callbackCollection = $callbackCollection;
+//    $this->defaultValueCollection = $defaultValueCollection;
+//    $this->setModule($this->pluginDefinition['module']);
+//    $this->multiPlugin($this->multipluginKey());
+//    $this->disabledByDefault('hierarchy.*');
+//  }
+//
+//
+//  /**
+//   * {@inheritdoc}
+//   */
+//  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+//    return new static(
+//      $configuration,
+//      $plugin_id,
+//      $plugin_definition,
+//      $container->get('crumbs.injected_api.collection.plugin_collection'),
+//      $container->get('crumbs.injected_api.collection.entity_plugin_collection'),
+//      $container->get('crumbs.injected_api.collection.callback_collection'),
+//      $container->get('crumbs.injected_api.collection.default_value_collection')
+//    );
+//  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition,
+                              crumbs_InjectedAPI_Collection_PluginCollection $pluginCollection,
+                              crumbs_InjectedAPI_Collection_EntityPluginCollection $entityPluginCollection,
+                              crumbs_InjectedAPI_Collection_CallbackCollection $callbackCollection,
+                              crumbs_InjectedAPI_Collection_DefaultValueCollection $defaultValueCollection) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->pluginCollection = $pluginCollection;
+    $this->entityPluginCollection = $entityPluginCollection;
+    $this->callbackCollection = $callbackCollection;
+    $this->defaultValueCollection = $defaultValueCollection;
+    $this->setModule($this->pluginDefinition['module']);
+    $this->multiPlugin($this->multipluginKey());
+    $this->disabledByDefault('hierarchy.*');
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('crumbs.injected_api.collection.plugin_collection'),
+      $container->get('crumbs.injected_api.collection.entity_plugin_collection'),
+      $container->get('crumbs.injected_api.collection.callback_collection'),
+      $container->get('crumbs.injected_api.collection.default_value_collection')
+    );
+  }
 
   /**
    * This is typically called before each invocation of hook_crumbs_plugins(),
@@ -178,6 +346,8 @@ abstract class crumbsPluginBase extends PluginBase implements crumbsPluginInterf
    *   The module name.
    */
   function setModule($module) {
+    print '<pre>'; print_r("hook crumbs plugin - set module"); print '</pre>';
+    print '<pre>'; print_r($module); print '</pre>';
     $this->module = $module;
   }
 
@@ -347,6 +517,9 @@ abstract class crumbsPluginBase extends PluginBase implements crumbsPluginInterf
    * @throws Exception
    */
   private function addPluginByType(crumbs_PluginInterface $plugin = NULL, $key = NULL, $route = NULL, $is_multi) {
+    print '<pre>'; print_r("this module"); print '</pre>';
+    print '<pre>'; print_r($this->module); print '</pre>';
+
     $plugin_key = isset($key)
       ? $this->module . '.' . $key
       : $this->module;
@@ -355,25 +528,28 @@ abstract class crumbsPluginBase extends PluginBase implements crumbsPluginInterf
         ? $this->module . '_CrumbsMultiPlugin'
         : $this->module . '_CrumbsMonoPlugin';
       $class .= isset($key) ? '_' . $key : '';
-      if (!class_exists($class)) {
-        throw new \Exception("Plugin class $class does not exist.");
-      }
-      $plugin = new $class();
+      $class = 'menu_CrumbsMultiPlugin_hierarchy';
+//      if (!class_exists($class)) {
+//        throw new \Exception("Plugin class " .$class. " does not exist.");
+//      }
+//      $plugin = new $class();
+
     }
     else {
-      $class = get_class($plugin);
+//      $class = get_class($plugin);
     }
-    if ($is_multi) {
-      if (!$plugin instanceof crumbs_MultiPlugin) {
-        throw new Exception("$class must implement class_MultiPlugin.");
-      }
-    }
-    else {
-      if (!$plugin instanceof crumbs_MonoPlugin) {
-        throw new Exception("$class must implement class_MonoPlugin.");
-      }
-    }
-    $this->addPlugin($plugin, $plugin_key, $route);
+//    if ($is_multi) {
+//      if (!$plugin instanceof crumbs_MultiPlugin) {
+//        throw new Exception("$class must implement class_MultiPlugin.");
+//      }
+//    }
+//    else {
+//      if (!$plugin instanceof crumbs_MonoPlugin) {
+//        throw new Exception("$class must implement class_MonoPlugin.");
+//      }
+//    }
+//    $this->addPlugin($plugin, $plugin_key, $route);
+    $this->addPlugin(new menu_CrumbsMultiPlugin_hierarchy, $plugin_key, $route);
   }
 
   /**
@@ -471,6 +647,10 @@ abstract class crumbsPluginBase extends PluginBase implements crumbsPluginInterf
    * @param string|NULL $key
    */
   protected function _disabledByDefault($key) {
+
+//    return "_disabled by default testing" . $key;
+
+
     $key = isset($key)
       ? ($this->module . '.' . $key)
       : $this->module;

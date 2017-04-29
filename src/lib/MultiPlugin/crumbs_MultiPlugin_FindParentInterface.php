@@ -1,9 +1,11 @@
 <?php
 
 namespace Drupal\crumbs\lib\Multiplugin;
+//use Drupal\crumbs\lib;
 
-interface crumbs_MultiPlugin_FindParentInterface extends crumbs_MultiPlugin {
+interface crumbs_MultiPlugin_FindParentInterface extends \Drupal\crumbs\lib\crumbs_MultiPlugin {
 
+//interface crumbs_MultiPlugin_FindParentInterface implements crumbs_MultiPlugin {
   /**
    * Find candidates for the parent path.
    *

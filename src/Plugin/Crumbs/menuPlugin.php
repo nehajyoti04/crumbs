@@ -10,10 +10,14 @@ use Drupal\crumbs\crumbsPluginBase;
  * Displays an image as a tip.
  *
  * @CrumbsAnnotation(
- *   id = "image",
- *   title = @Translation("Image"),
+ *   id = "menu",
+ *   title = @Translation("Menu"),
  *   name = @Translation("Chocolate"),
- *   price = 1.75
+ *   price = 1.75,
+ *   multipluginKey = "hierarchy",
+ *   module = "menu",
+ *   disabled_by_default_key = "*",
+ *   monoplugin_key = "home_title",
  * )
  */
 class menuPlugin extends crumbsPluginBase {
@@ -38,6 +42,15 @@ class menuPlugin extends crumbsPluginBase {
    * {@inheritdoc}
    */
   public function getOutput() {
+//    print '<pre>'; print_r("default value collection"); print '</pre>';
+//    print '<pre>'; print_r($this->defaultValueCollection); print '</pre>';
+//    $this->defaultValueCollection
+
+
+    $output = $this->custom_monoplugin_describe();
+
+    return $output;
+
     return "hello there";
     return [
 

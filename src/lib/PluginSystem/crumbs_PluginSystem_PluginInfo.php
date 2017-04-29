@@ -1,5 +1,20 @@
 <?php
 
+
+namespace Drupal\crumbs\lib\PluginSystem;
+
+use Drupal\crumbs\lib\Container\crumbs_Container_AbstractLazyDataCached;
+use Drupal\crumbs\lib\Container\crumbs_Container_MultiWildcardData;
+use Drupal\crumbs\lib\Container\crumbs_Container_WeightMap;
+use Drupal\crumbs\lib\crumbs_PluginInterface;
+use Drupal\crumbs\lib\crumbs_UnserializeException;
+use Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_CallbackCollection;
+use Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_CollectionResult;
+use Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_DefaultValueCollection;
+use Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_EntityPluginCollection;
+use Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_PluginCollection;
+use Drupal\crumbs\lib\InjectedAPI\crumbs_InjectedAPI_hookCrumbsPlugins;
+
 /**
  * Info about available plugins and their weights.
  *
@@ -338,6 +353,7 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
    * @see crumbs_PluginSystem_PluginInfo::$pluginsCached
    */
   protected function get_pluginsCached() {
+    print '<pre>'; print_r("inside - get plugins cached"); print '</pre>';
     $plugins = $this->discovery->getPlugins();
     foreach ($plugins as $plugin_key => $plugin) {
       // Let plugins know about the weights, if they want to.
@@ -356,6 +372,7 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
    * @see crumbs_PluginSystem_PluginInfo::$discovery
    */
   protected function get_discovery() {
+
     $this->includePluginFiles;
 
     // Pass a by-reference parameter to the $api object, that can only be
@@ -366,15 +383,37 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
       new crumbs_InjectedAPI_Collection_CallbackCollection,
       $defaultValueCollection = new crumbs_InjectedAPI_Collection_DefaultValueCollection);
 
-    foreach (module_implements('crumbs_plugins') as $module) {
-      $function = $module .'_crumbs_plugins';
-      $api->setModule($module);
-      $function($api);
+
+    // Custom code by JYOTI starts
+    $type = \Drupal::service('plugin.manager.crumbs');
+//    Get a list of available plugins:
+
+    $plugin_definitions = $type->getDefinitions();
+    print '<pre>'; print_r("plugin definition"); print '</pre>';
+
+    foreach($plugin_definitions as $module => $plugin_definition) {
+      print '<pre>'; print_r("plugin_definition->defaultValueCollection"); print '</pre>';
+      print '<pre>'; print_r($plugin_definition->defaultValueCollection); print '</pre>';
+
+//      print '<pre>'; print_r($plugin_definition['disabled_by_default_key']); print '</pre>';
+
+      // Call code inside $module_crumbs_plugins in D7
+//      disabled_by_default_key
+//      $api->disabledByDefault('*');
     }
 
-    $entityPluginCollection->finalize($pluginCollection);
 
-    return new crumbs_InjectedAPI_Collection_CollectionResult($pluginCollection, $defaultValueCollection);
+    // Custom code by JYOTI ends
+
+//    foreach (module_implements('crumbs_plugins') as $module) {
+//      $function = $module .'_crumbs_plugins';
+//      $api->setModule($module);
+//      $function($api);
+//    }
+//
+//    $entityPluginCollection->finalize($pluginCollection);
+//
+//    return new crumbs_InjectedAPI_Collection_CollectionResult($pluginCollection, $defaultValueCollection);
   }
 
   /**
@@ -477,6 +516,30 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
     }
 
     return TRUE;
+  }
+
+  public function _customGetAPI() {
+    $this->includePluginFiles;
+
+    // Pass a by-reference parameter to the $api object, that can only be
+    // changed from here.
+    $api = new crumbs_InjectedAPI_hookCrumbsPlugins(
+      $pluginCollection = new crumbs_InjectedAPI_Collection_PluginCollection,
+      $entityPluginCollection = new crumbs_InjectedAPI_Collection_EntityPluginCollection,
+      new crumbs_InjectedAPI_Collection_CallbackCollection,
+      $defaultValueCollection = new crumbs_InjectedAPI_Collection_DefaultValueCollection);
+
+    return $api;
+
+//    foreach (module_implements('crumbs_plugins') as $module) {
+//      $function = $module .'_crumbs_plugins';
+//      $api->setModule($module);
+//      $function($api);
+//    }
+//
+//    $entityPluginCollection->finalize($pluginCollection);
+//
+//    return new crumbs_InjectedAPI_Collection_CollectionResult($pluginCollection, $defaultValueCollection);
   }
 
 }

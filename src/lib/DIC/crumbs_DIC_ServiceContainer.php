@@ -5,13 +5,13 @@ namespace Drupal\crumbs\lib\DIC;
 use crumbs_CallbackRestoration;
 use crumbs_PluginSystem_PluginBag;
 use crumbs_PluginSystem_PluginEngine;
-use crumbs_PluginSystem_PluginInfo;
 use Drupal\crumbs\lib\crumbs_BreadcrumbBuilder;
 use Drupal\crumbs\lib\crumbs_CurrentPageInfo;
 use Drupal\crumbs\lib\crumbs_ParentFinder;
 use Drupal\crumbs\lib\crumbs_Router;
 use Drupal\crumbs\lib\crumbs_TrailCache;
 use Drupal\crumbs\lib\crumbs_TrailFinder;
+use Drupal\crumbs\lib\PluginSystem\crumbs_PluginSystem_PluginInfo;
 
 /**
  * Little brother of a dependency injection container (DIC)
@@ -106,7 +106,7 @@ class crumbs_DIC_ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
    *
    * @see crumbs_DIC_ServiceContainer::$pluginInfo
    */
-  protected function pluginInfo() {
+  public function pluginInfo() {
     return new crumbs_PluginSystem_PluginInfo();
   }
 

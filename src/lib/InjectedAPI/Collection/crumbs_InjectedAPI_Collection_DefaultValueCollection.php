@@ -29,6 +29,8 @@ class crumbs_InjectedAPI_Collection_DefaultValueCollection {
    */
   function setDefaultValue($key, $value) {
     $this->defaultValues[$key] = $value;
+    print '<pre>'; print_r("default values - key - value"); print '</pre>';
+    print '<pre>'; print_r($key . " ". $value ); print '</pre>';
   }
 
 } 

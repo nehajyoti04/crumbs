@@ -2,7 +2,7 @@
 
 namespace Drupal\crumbs\lib\Multiplugin;
 
-use crumbs_MultiPlugin;
+
 
 abstract class crumbs_MultiPlugin_EntityFindAbstract implements crumbs_MultiPlugin {
 

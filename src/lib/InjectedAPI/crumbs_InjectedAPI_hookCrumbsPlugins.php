@@ -1,11 +1,12 @@
 <?php
 
 namespace Drupal\crumbs\lib\InjectedAPI;
-use crumbs_EntityPlugin;
-use crumbs_InjectedAPI_Collection_CallbackCollection;
-use crumbs_InjectedAPI_Collection_DefaultValueCollection;
-use crumbs_InjectedAPI_Collection_EntityPluginCollection;
-use Drupal\crumbs\lib\InjectedAPI\crumbs_InjectedAPI_Collection_PluginCollection\crumbs_InjectedAPI_Collection_PluginCollection;
+use crumbs_EntityPlugin_Callback;
+use Drupal\crumbs\lib\crumbs_EntityPlugin;
+use Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_CallbackCollection;
+use Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_DefaultValueCollection;
+use Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_EntityPluginCollection;
+use Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_PluginCollection;
 
 /**
  * API object to be used as an argument for hook_crumbs_plugins()
@@ -346,12 +347,15 @@ class crumbs_InjectedAPI_hookCrumbsPlugins {
    *   a single string key, relative to the module name.
    */
   function disabledByDefault($keys = NULL) {
+    print '<pre>'; print_r("inside disable by default"); print '</pre>';
     if (is_array($keys)) {
       foreach ($keys as $key) {
         $this->_disabledByDefault($key);
       }
     }
     else {
+      print '<pre>'; print_r("else - keys"); print '</pre>';
+      print '<pre>'; print_r($keys); print '</pre>';
       $this->_disabledByDefault($keys);
     }
   }
