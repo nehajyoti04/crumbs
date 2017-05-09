@@ -311,6 +311,7 @@ abstract class crumbsPluginBase extends PluginBase implements crumbsPluginInterf
                               crumbs_InjectedAPI_Collection_CallbackCollection $callbackCollection,
                               crumbs_InjectedAPI_Collection_DefaultValueCollection $defaultValueCollection) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    print '<pre>'; print_r("Crumbs Plugin Base - plugin Collection"); print '</pre>';
     $this->pluginCollection = $pluginCollection;
     $this->entityPluginCollection = $entityPluginCollection;
     $this->callbackCollection = $callbackCollection;
@@ -346,8 +347,8 @@ abstract class crumbsPluginBase extends PluginBase implements crumbsPluginInterf
    *   The module name.
    */
   function setModule($module) {
-    print '<pre>'; print_r("hook crumbs plugin - set module"); print '</pre>';
-    print '<pre>'; print_r($module); print '</pre>';
+//    print '<pre>'; print_r("hook crumbs plugin - set module"); print '</pre>';
+//    print '<pre>'; print_r($module); print '</pre>';
     $this->module = $module;
   }
 

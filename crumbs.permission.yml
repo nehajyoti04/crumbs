@@ -1,0 +1,3 @@
+administer crumbs:
+  title: 'Administer Crumbs'
+  restrict access: TRUE

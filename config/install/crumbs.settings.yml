@@ -6,4 +6,6 @@ crumbs_separator_span: FALSE
 crumbs_home_link_title: 'Home'
 crumbs_original_theme_breadcrumb: array()
 crumbs_override_theme_breadcrumb: array('theme_breadcrumb')
-crumbs_weights: array('crumbs.home_title' => 0)
+crumbs_weights:
+  home_title:
+   weight: 0

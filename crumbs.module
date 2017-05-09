@@ -1,4 +1,5 @@
 <?php
+use Drupal\Core\Url;
 use Drupal\crumbs;
 use Drupal\crumbs\crumbs_InjectedAPI_hookCrumbsPlugins;
 use Drupal\crumbs\lib\crumbsRouter;
@@ -81,8 +82,115 @@ function crumbs_theme($existing, $type, $theme, $path) {
     'crumbs_debug_page' => array(
       'variables' => array('crumbs_debug_page' => NULL),
     ),
+    'crumbs_breadcrumb_link' => array(
+      'variables' => array('crumbs_breadcrumb_link' => NULL),
+      'function' => 'theme_crumbs_breadcrumb_link',
+    ),
+    'crumbs_breadcrumb' => array(
+      'variables' => array(
+        'breadcrumb' => NULL,
+        'crumbs_breadcrumb_items' => NULL,
+        'crumbs_trail' => NULL,
+        'crumbs_separator' => NULL,
+        'crumbs_separator_span' => NULL,
+        'crumbs_trailing_separator' => NULL,
+      ),
+      'function' => 'theme_crumbs_breadcrumb',
+    ),
   );
 }
+
+/**
+ * Replacement theme callback for theme('breadcrumb').
+ *
+ * @param $variables
+ * @return string|null
+ *   Rendered breadcrumb HTML
+ */
+function theme_crumbs_breadcrumb($variables) {
+//  print '<pre>'; print_r("theme - crumbs_theme_breadcrumb - variables"); print '</pre>';exit;
+//  print '<pre>'; print_r($variables); print '</pre>';
+  $breadcrumb = $variables['breadcrumb'];
+//  return "hello check check";
+//  print '<pre>'; print_r("theme - breadcrumb"); print '</pre>';
+//  print '<pre>'; print_r($breadcrumb); print '</pre>';
+  if (empty($breadcrumb)) {
+//    print '<pre>'; print_r("empty - theme - breadcrumb"); print '</pre>';
+    return NULL;
+  }
+
+  // These settings may be missing, if theme('breadcrumb') is called from
+  // somewhere outside of Crumbs, or if another module is messing with the theme
+  // registry.
+  $variables += array(
+    'crumbs_trailing_separator' => FALSE,
+    'crumbs_separator' => ' &raquo; ',
+    'crumbs_separator_span' => FALSE,
+  );
+
+  $separator = $variables['crumbs_separator'];
+  if ($variables['crumbs_separator_span']) {
+    $separator = '<span class="crumbs-separator">' . $separator . '</span>';
+  }
+
+  $output = implode($separator, $breadcrumb);
+  if ($variables['crumbs_trailing_separator']) {
+    $output .= $separator;
+  }
+
+//  print '<pre>'; print_r("theme - breadcrumb - output"); print '</pre>';
+//  print '<pre>'; print_r($output); print '</pre>';
+
+  $output = '<div class="breadcrumb">' . $output . '</div>';
+
+
+
+  // Provide a navigational heading to give context for breadcrumb links to
+  // screen-reader users. Make the heading invisible with .element-invisible.
+  return '<h2 class="element-invisible">' . t('You are here') . '</h2>' . $output;
+}
+
+//
+//function d8_activity_list_theme() {
+//  return array(
+//    'd8_activity_list' => array(
+//      'variables' => array('d8_activity_list_detail' => NULL,
+//        'function' => 'theme_crumbs_breadcrumb_link',
+//      )
+//    ),
+//  );
+//}
+
+///**
+// * Default theme implementation for theme('crumbs_breadcrumb_link').
+// *
+// * @param array $item
+// *
+// * @return string
+// */
+//function theme_crumbs_breadcrumb_link(array $item) {
+////  print '<pre>'; print_r("inside theme - breadcrumb link"); print '</pre>';
+////  print '<pre>'; print_r("item href"); print '</pre>';
+////  print '<pre>'; print_r($item); print '</pre>';
+//
+//  if ('<nolink>' === $item['href']) {
+//    return \Drupal\Component\Utility\SafeMarkup::checkPlain($item['title']);
+//  }
+//  else {
+//    $options = isset($item['localized_options']) ? $item['localized_options'] : array();
+//
+//    $link =  \Drupal::l($item['title'],  Url::fromUri('internal:'. $item['link_path'], $options));
+//    return [
+//      '#type' => 'markup',
+//      'markup' => $link,
+//    ];
+//    // @FIXME
+//// l() expects a Url object, created from a route name or external URI.
+//// return l($item['title'], $item['href'], $options);
+//
+//  }
+//}
+
 
 
 //// Page hook implementations
@@ -220,3 +328,6 @@ function crumbs_reduce_path($path, $depth = -1) {
 //    return crumbs_DIC_ServiceContainer;
 //  }
 //}
+
+
+

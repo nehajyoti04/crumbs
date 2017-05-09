@@ -2,6 +2,8 @@
 
 namespace Drupal\crumbs\lib\Container;
 
+use Symfony\Component\Config\Definition\Exception\Exception;
+
 abstract class crumbs_Container_AbstractLazyDataCached {
 
   /**
@@ -46,6 +48,8 @@ abstract class crumbs_Container_AbstractLazyDataCached {
    * @throws Exception
    */
   function __get($key) {
+//    print '<pre>'; print_r("abstractLazyDataCached - __get - key"); print '</pre>';
+//    print '<pre>'; print_r($key); print '</pre>';
     if (array_key_exists($key, $this->data)) {
       return $this->data[$key];
     }
@@ -66,7 +70,7 @@ abstract class crumbs_Container_AbstractLazyDataCached {
    * @throws Exception
    */
   private function getCached($key) {
-    $cache = cache_get("crumbs:$key");
+    $cache = \Drupal::cache()->get("crumbs:$key");
     if (isset($cache->data)) {
       // We do the serialization manually,
       // to prevent Drupal from intercepting exceptions.
@@ -81,7 +85,7 @@ abstract class crumbs_Container_AbstractLazyDataCached {
     if (!is_array($data)) {
       throw new Exception("Only arrays can be cached in crumbs_CachedLazyPluginInfo.");
     }
-    cache_set("crumbs:$key", serialize($data));
+    \Drupal::cache()->set("crumbs:$key", serialize($data));
     return $data;
   }
 
@@ -96,10 +100,18 @@ abstract class crumbs_Container_AbstractLazyDataCached {
    * @throws Exception
    */
   private function get($key) {
+
+
     $method = 'get_' . $key;
+//    print '<pre>'; print_r("abstract lazy Data cache - get - method"); print '</pre>';
+//    print '<pre>'; print_r($method); print '</pre>';
     if (!method_exists($this, $method)) {
       $class = get_class($this);
-      throw new Exception("Key '$key' not supported in $class.");
+      print '<pre>'; print_r("abstractLazyDataCached - get - KEY"); print '</pre>';
+      print '<pre>'; print_r($key); print '</pre>';
+      print '<pre>'; print_r("abstractLazyDataCached - get - class"); print '</pre>';
+      print '<pre>'; print_r($class); print '</pre>'; exit;
+      throw new Exception("Key ".$key." not supported in ".$class. ".");
     }
     $result = $this->$method($this);
     return isset($result)

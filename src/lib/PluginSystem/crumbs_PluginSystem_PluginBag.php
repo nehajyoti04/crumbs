@@ -1,5 +1,10 @@
 <?php
 
+namespace Drupal\crumbs\lib\PluginSystem;
+
+
+use Drupal\crumbs\lib\crumbs_MonoPlugin;
+use Drupal\crumbs\lib\crumbs_PluginInterface;
 
 class crumbs_PluginSystem_PluginBag {
 
@@ -25,10 +30,10 @@ class crumbs_PluginSystem_PluginBag {
    * @param true[][] $routelessPluginMethods
    * @param true[][][] $routePluginMethods
    */
-  function __construct($plugins, $routelessPluginMethods, $routePluginMethods) {
-    $this->plugins = $plugins;
-    $this->routelessPluginMethods = $routelessPluginMethods;
-    $this->routePluginMethods = $routePluginMethods;
+  function __construct(crumbs_PluginSystem_PluginInfo $crumbs_PluginSystem_PluginInfo) {
+    $this->plugins = $crumbs_PluginSystem_PluginInfo->get_plugins();
+    $this->routelessPluginMethods = $crumbs_PluginSystem_PluginInfo->get_routelessPluginMethods();
+    $this->routePluginMethods = $crumbs_PluginSystem_PluginInfo->get_routePluginMethods();
   }
 
   /**
@@ -54,7 +59,7 @@ class crumbs_PluginSystem_PluginBag {
    *
    * @return crumbs_PluginSystem_PluginMethodIterator
    */
-  function getRoutePluginMethodIterator($base_method_name, $route) {
+  public function getRoutePluginMethodIterator($base_method_name, $route) {
     $methods = $this->getRoutePluginMethods($base_method_name, $route);
     return new crumbs_PluginSystem_PluginMethodIterator($methods, $this->plugins, $base_method_name);
   }

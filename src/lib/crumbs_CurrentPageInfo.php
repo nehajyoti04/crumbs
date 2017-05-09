@@ -1,6 +1,9 @@
 <?php
 
 namespace Drupal\crumbs\lib;
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Url;
+use Drupal\crumbs\lib\Container\crumbs_Container_AbstractLazyData;
 
 /**
  * Creates various data related to the current page.
@@ -32,6 +35,7 @@ namespace Drupal\crumbs\lib;
  */
 class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
 
+
   /**
    * @var crumbs_TrailCache
    */
@@ -52,7 +56,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @param crumbs_BreadcrumbBuilder $breadcrumbBuilder
    * @param crumbs_Router $router
    */
-  function __construct($trails, $breadcrumbBuilder, $router) {
+  function __construct(crumbs_TrailCache $trails, crumbs_BreadcrumbBuilder $breadcrumbBuilder, crumbs_Router $router) {
     $this->trails = $trails;
     $this->breadcrumbBuilder = $breadcrumbBuilder;
     $this->router = $router;
@@ -100,7 +104,9 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$trail
    */
   protected function trail() {
-    return $this->trails->getForPath($this->path);
+//    return $this->trails->getForPath($this->path);
+//    return $this->crumbs_TrailCache->getForPath($this->path);
+    return \Drupal::service('crumbs.trail_cache')->getForPath($this->path);
   }
 
   /**
@@ -121,7 +127,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
     if ($this->breadcrumbSuppressed) {
       return array();
     }
-    if (user_access('administer crumbs')) {
+    if (\Drupal::currentUser()->hasPermission('administer crumbs')) {
       // Remember which pages we are visiting,
       // for the autocomplete on admin/structure/crumbs/debug.
       unset($_SESSION['crumbs.admin.debug.history'][$this->path]);
@@ -132,7 +138,12 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
       }
     }
     $trail = $this->trail;
+//    print '<pre>'; print_r("count(trail)"); print '</pre>';
+//    print '<pre>'; print_r(count($trail)); print '</pre>';
+//    print '<pre>'; print_r("minTrailItems"); print '</pre>';
+//    print '<pre>'; print_r($this->minTrailItems); print '</pre>';
     if (count($trail) < $this->minTrailItems) {
+      print '<pre>'; print_r("count(trail) < this->minTrailItems"); print '</pre>';
       return array();
     }
     if (!$this->showFrontPage) {
@@ -142,9 +153,14 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
       array_pop($trail);
     }
     if (!count($trail)) {
+//      print '<pre>'; print_r("!count(trail)"); print '</pre>';
       return array();
     }
+//    print '<pre>'; print_r("current page info - trail"); print '</pre>';
+//    print '<pre>'; print_r($trail); print '</pre>';
     $items = $this->breadcrumbBuilder->buildBreadcrumb($trail);
+//    print '<pre>'; print_r("this breadcrumbBuilder->buildBreadcrumb(trail)"); print '</pre>';
+//    print '<pre>'; print_r($items); print '</pre>';
     if (count($items) < $this->minVisibleItems) {
       // Some items might get lost due to having an empty title.
       return array();
@@ -160,7 +176,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$showCurrentPage
    */
   protected function showCurrentPage() {
-    return variable_get('crumbs_show_current_page', FALSE) & ~CRUMBS_TRAILING_SEPARATOR;
+    return \Drupal::state()->get('crumbs_show_current_page', FALSE) & ~CRUMBS_TRAILING_SEPARATOR;
   }
 
   /**
@@ -169,7 +185,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$trailingSeparator
    */
   protected function trailingSeparator() {
-    return variable_get('crumbs_show_current_page', FALSE) & CRUMBS_TRAILING_SEPARATOR;
+    return \Drupal::state()->get('crumbs_show_current_page', FALSE) & CRUMBS_TRAILING_SEPARATOR;
   }
 
   /**
@@ -180,7 +196,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$showFrontPage
    */
   protected function showFrontPage() {
-    return variable_get('crumbs_show_front_page', TRUE);
+    return \Drupal::state()->get('crumbs_show_front_page', TRUE);
   }
 
   /**
@@ -191,7 +207,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$minTrailItems
    */
   protected function minTrailItems() {
-    return variable_get('crumbs_minimum_trail_items', 2);
+    return \Drupal::state()->get('crumbs_minimum_trail_items', 2);
   }
 
   /**
@@ -202,7 +218,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$separator
    */
   protected function separator() {
-    return filter_xss_admin(variable_get('crumbs_separator', ' &raquo; '));
+    return Xss::filterAdmin(\Drupal::state()->get('crumbs_separator', ' &raquo; '));
   }
 
   /**
@@ -213,7 +229,7 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$separatorSpan
    */
   protected function separatorSpan() {
-    return (bool)variable_get('crumbs_separator_span', FALSE);
+    return (bool)\Drupal::state()->get('crumbs_separator_span', FALSE);
   }
 
   /**
@@ -229,6 +245,8 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    */
   protected function minVisibleItems() {
     $n = $this->minTrailItems;
+//    print '<pre>'; print_r("show current page"); print '<pre>';
+//    print '<pre>'; print_r($this->showCurrentPage); print '<pre>';
     if (!$this->showCurrentPage) {
       --$n;
     }
@@ -245,15 +263,20 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    *
    * @see crumbs_CurrentPageInfo::$breadcrumbItems
    */
-  protected function breadcrumbItems() {
+  public function breadcrumbItems() {
     $breadcrumb_items = $this->rawBreadcrumbItems;
+//    print '<pre>'; print_r("rawBreadcrumbItems"); print '</pre>';
+//    print '<pre>'; print_r($breadcrumb_items); print '</pre>';
     if (empty($breadcrumb_items)) {
       return array();
     }
+//    print '<pre>'; print_r("breadCrumbs - this->path"); print '</pre>';
+//    print '<pre>'; print_r($this->path); print '</pre>';
     $router_item = $this->router->getRouterItem($this->path);
     // Allow modules to alter the breadcrumb, if possible, as that is much
     // faster than rebuilding an entirely new active trail.
-    drupal_alter('menu_breadcrumb', $breadcrumb_items, $router_item);
+    // @TODO : for now commenting.
+//    \Drupal::moduleHandler()->alter('menu_breadcrumb', $breadcrumb_items, $router_item);
     return $breadcrumb_items;
   }
 
@@ -264,8 +287,10 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    *
    * @see crumbs_CurrentPageInfo::$breadcrumbHtml
    */
-  protected function breadcrumbHtml() {
+  public function breadcrumbHtml() {
     $breadcrumb_items = $this->breadcrumbItems;
+//     print '<pre>'; print_r("breadcrumb_items"); print '</pre>';
+//     print '<pre>'; print_r($breadcrumb_items); print '</pre>';
     if (empty($breadcrumb_items)) {
       return '';
     }
@@ -282,18 +307,73 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
     }
     else {
       foreach ($breadcrumb_items as $i => $item) {
-        $links[$i] = theme('crumbs_breadcrumb_link', $item);
+
+        $links[$i] =  $this->_crumbs_breadcrumb_link($item);;
+
       }
     }
-    return theme('breadcrumb', array(
-      'breadcrumb' => $links,
-      'crumbs_breadcrumb_items' => $breadcrumb_items,
-      'crumbs_trail' => $this->trail,
-      'crumbs_separator' => $this->separator,
-      'crumbs_separator_span' => $this->separatorSpan,
-      'crumbs_trailing_separator' => $this->trailingSeparator,
-    ));
+//    return theme('breadcrumb', array(
+//      'breadcrumb' => $links,
+//      'crumbs_breadcrumb_items' => $breadcrumb_items,
+//      'crumbs_trail' => $this->trail,
+//      'crumbs_separator' => $this->separator,
+//      'crumbs_separator_span' => $this->separatorSpan,
+//      'crumbs_trailing_separator' => $this->trailingSeparator,
+//    ));
+
+//    $output = [
+//      '#theme' => 'test_breadcrumb',
+//      '#test_breadcrumb_variable' => 'hello 123'
+//    ];
+
+    $output = [
+      '#theme' => 'crumbs_breadcrumb',
+      '#breadcrumb' => $links,
+//      '#breadcrumb' => 'hello 123',
+      '#crumbs_breadcrumb_items' => $breadcrumb_items,
+      '#crumbs_trail' => $this->trail,
+      '#crumbs_separator' => $this->separator,
+      '#crumbs_separator_span' => $this->separatorSpan,
+      '#crumbs_trailing_separator' => $this->trailingSeparator,
+    ];
+//    print '<pre>'; print_r("breadcrumb_html - last - output"); print '</pre>';
+//    print '<pre>'; print_r($output); print '</pre>';
+    return $output;
   }
+
+
+  /**
+   * Default theme implementation for theme('crumbs_breadcrumb_link').
+   *
+   * @param array $item
+   *
+   * @return string
+   */
+  public function _crumbs_breadcrumb_link(array $item) {
+//  print '<pre>'; print_r("inside theme - breadcrumb link"); print '</pre>';
+//  print '<pre>'; print_r("item href"); print '</pre>';
+//  print '<pre>'; print_r($item); print '</pre>';
+
+    if ('<nolink>' === $item['href']) {
+      return \Drupal\Component\Utility\SafeMarkup::checkPlain($item['title']);
+    }
+    else {
+      $options = isset($item['localized_options']) ? $item['localized_options'] : array();
+
+      $link =  \Drupal::l($item['title'],  Url::fromUri('internal:/'. $item['link_path'], $options))->__toString();
+//      return [
+//        '#type' => 'markup',
+//        'markup' => $link,
+//      ];
+      return $link;
+      // @FIXME
+// l() expects a Url object, created from a route name or external URI.
+// return l($item['title'], $item['href'], $options);
+
+    }
+  }
+
+
 
   /**
    * Determine current path.
@@ -303,7 +383,15 @@ class crumbs_CurrentPageInfo extends crumbs_Container_AbstractLazyData {
    * @see crumbs_CurrentPageInfo::$path
    */
   protected function path() {
-    return $_GET['q'];
+    $current_path = \Drupal::service('path.current')->getPath();
+//   print '<pre>'; print_r("current path"); print '</pre>';
+   // print '<pre>'; print_r($_GET['q']); print '</pre>';
+//   print '<pre>'; print_r($current_path); print '</pre>';
+//    return $_GET['q'];
+    return 'search/node';
+    return $current_path;
   }
+
+
 
 }

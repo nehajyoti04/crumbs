@@ -2,8 +2,11 @@
 
 namespace Drupal\crumbs\lib\InjectedAPI\Collection;
 
+use Drupal\crumbs\lib\crumbs_MonoPlugin;
 use Drupal\crumbs\lib\crumbs_MultiPlugin;
 use Drupal\crumbs\lib\crumbs_PluginInterface;
+use Drupal\crumbs\lib\Monoplugin\crumbs_MonoPlugin_LegacyWrapper;
+use Drupal\crumbs\lib\Multiplugin\crumbs_MultiPlugin_LegacyWrapper;
 use ReflectionObject;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
@@ -97,9 +100,9 @@ class crumbs_InjectedAPI_Collection_PluginCollection {
    * @throws Exception
    */
   function addPlugin(crumbs_PluginInterface $plugin, $plugin_key, $route = NULL) {
-    if (isset($this->plugins[$plugin_key])) {
-      throw new Exception("There already is a plugin with key '$plugin_key'.");
-    }
+//    if (isset($this->plugins[$plugin_key])) {
+//      throw new Exception("There already is a plugin with key '$plugin_key'.");
+//    }
     if (isset($route)) {
       $legacyMethods = $this->analyzeRoutePluginMethods($route, $plugin_key, $plugin);
     }

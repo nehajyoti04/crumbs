@@ -3,6 +3,7 @@
 
 namespace Drupal\crumbs\lib\PluginSystem;
 
+use crumbs_PluginOperation_describe;
 use Drupal\crumbs\lib\Container\crumbs_Container_AbstractLazyDataCached;
 use Drupal\crumbs\lib\Container\crumbs_Container_MultiWildcardData;
 use Drupal\crumbs\lib\Container\crumbs_Container_WeightMap;
@@ -14,6 +15,7 @@ use Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_Defau
 use Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_EntityPluginCollection;
 use Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_PluginCollection;
 use Drupal\crumbs\lib\InjectedAPI\crumbs_InjectedAPI_hookCrumbsPlugins;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Info about available plugins and their weights.
@@ -52,7 +54,30 @@ use Drupal\crumbs\lib\InjectedAPI\crumbs_InjectedAPI_hookCrumbsPlugins;
  * @property array $pluginsSorted
  * @property bool $includePluginFiles
  */
-class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCached {
+
+class crumbs_PluginSystem_PluginInfo {
+
+//class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCached {
+
+
+  protected $collectionResult;
+  /**
+   * {@inheritdoc}
+   */
+//  public function __construct(crumbs_InjectedAPI_Collection_CollectionResult $collectionResult) {
+//    parent::__construct();
+//    $this->collectionResult = $collectionResult;
+//  }
+
+
+//  /**
+//   * {@inheritdoc}
+//   */
+//  public static function create(ContainerInterface $container) {
+//    return new static(
+//      $container->get('crumbs.injected_api.collection.collection_result')
+//    );
+//  }
 
   /**
    * Which keys to load from persistent cache.
@@ -65,14 +90,16 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
     // If this fails, we want to totally circumvent the cache.
     $callback_before = ini_get('unserialize_callback_func');
     ini_set('unserialize_callback_func', '_crumbs_unserialize_failure');
-    try {
-      // Trigger $this->__get('plugins').
-      $this->plugins;
-    }
-    catch (crumbs_UnserializeException $exception) {
-      // Don't cache anything this round.
-      return array();
-    }
+//    try {
+////      print '<pre>'; print_r("this plugins - before"); print '</pre>';
+//      // Trigger $this->__get('plugins').
+//      $this->plugins;
+////      print '<pre>'; print_r("this plugins - after"); print '</pre>';exit;
+//    }
+//    catch (crumbs_UnserializeException $exception) {
+//      // Don't cache anything this round.
+//      return array();
+//    }
     ini_set('unserialize_callback_func', $callback_before);
 
     return array('weights', 'pluginsCached', 'defaultWeights', 'pluginRoutes', 'pluginOrder');
@@ -116,7 +143,8 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
    * @see crumbs_PluginSystem_PluginInfo::$defaultWeights
    */
   protected function get_defaultWeights() {
-    return $this->discovery->getDefaultValues();
+    return \Drupal::service('crumbs.injected_api.collection.collection_result')->getDefaultValues();
+//    return $this->discovery->getDefaultValues();
   }
 
   /**
@@ -125,8 +153,9 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
    *
    * @see crumbs_PluginSystem_PluginInfo::$routePluginMethodsUnsorted
    */
-  protected function get_routePluginMethodsUnsorted() {
-    return $this->discovery->getRoutePluginMethods();
+  public function get_routePluginMethodsUnsorted() {
+    return \Drupal::service('crumbs.injected_api.collection.collection_result')->getRoutePluginMethods();
+//    return $this->discovery->getRoutePluginMethods();
   }
 
   /**
@@ -136,7 +165,8 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
    * @see crumbs_PluginSystem_PluginInfo::$routelessPluginMethodsUnsorted
    */
   protected function get_routelessPluginMethodsUnsorted() {
-    return $this->discovery->getRoutelessPluginMethods();
+    return \Drupal::service('crumbs.injected_api.collection.collection_result')->getRoutelessPluginMethods();
+//    return $this->discovery->getRoutelessPluginMethods();
   }
 
   /**
@@ -165,7 +195,7 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
    *
    * @see crumbs_PluginSystem_PluginInfo::$routePluginMethods
    */
-  protected function get_routePluginMethods() {
+  public function get_routePluginMethods() {
     $unsorted_all = $this->routePluginMethodsUnsorted;
     $types = array(
       'decorateBreadcrumb' => 'alter',
@@ -194,7 +224,7 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
    *
    * @see crumbs_PluginSystem_PluginInfo::$routelessPluginMethods
    */
-  protected function get_routelessPluginMethods() {
+  public function get_routelessPluginMethods() {
     $unsorted = $this->routelessPluginMethodsUnsorted;
     $types = array(
       'decorateBreadcrumb' => 'alter',
@@ -239,7 +269,7 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
    * @see crumbs_PluginSystem_PluginInfo::$userWeights
    */
   protected function get_userWeights() {
-    $user_weights = variable_get('crumbs_weights', array(
+    $user_weights = \Drupal::state()->get('crumbs_weights', array(
       // The user expects the crumbs.home_title plugin to be dominant.
       // @todo There must be a better way to do this.
       'crumbs.home_title' => 0,
@@ -338,7 +368,7 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
    *
    * @see crumbs_PluginSystem_PluginInfo::$plugins
    */
-  protected function get_plugins() {
+  public function get_plugins() {
     // We use a trick to always include the plugin files, even if the plugins
     // are coming from the cache.
     $this->includePluginFiles;
@@ -353,8 +383,21 @@ class crumbs_PluginSystem_PluginInfo extends crumbs_Container_AbstractLazyDataCa
    * @see crumbs_PluginSystem_PluginInfo::$pluginsCached
    */
   protected function get_pluginsCached() {
-    print '<pre>'; print_r("inside - get plugins cached"); print '</pre>';
-    $plugins = $this->discovery->getPlugins();
+//    print '<pre>'; print_r("inside - get plugins cached"); print '</pre>';
+//    $plugins = $this->discovery->getPlugins();
+//    $plugins = $this->get_discovery()->getPlugins();
+//    $plugins = $this->collectionResult->getPlugins();
+
+//    $pluginCollection = \Drupal::service('crumbs.injected_api.collection.plugin_collection');
+//      $entityPluginCollection = new crumbs_InjectedAPI_Collection_EntityPluginCollection,
+//      new crumbs_InjectedAPI_Collection_CallbackCollection,
+//      $defaultValueCollection = \Drupal::service('crumbs.injected_api.collection.default_value_collection');
+
+//    $plugins = \Drupal::service('crumbs.injected_api.collection.collection_result')->getPlugins($pluginCollection, $defaultValueCollection);
+    $plugins = \Drupal::service('crumbs.injected_api.collection.collection_result')->getPlugins();
+//    $plugins = crumbs_InjectedAPI_Collection_CollectionResult::getPlugins();
+//    print '<pre>'; print_r("inside - get plugins cached - plugins"); print '</pre>';
+//    print '<pre>'; print_r($plugins); print '</pre>';exit;
     foreach ($plugins as $plugin_key => $plugin) {
       // Let plugins know about the weights, if they want to.
       if (method_exists($plugin, 'initWeights')) {

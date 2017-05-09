@@ -3,14 +3,14 @@
 namespace Drupal\crumbs\lib\DIC;
 
 use crumbs_CallbackRestoration;
-use crumbs_PluginSystem_PluginBag;
-use crumbs_PluginSystem_PluginEngine;
 use Drupal\crumbs\lib\crumbs_BreadcrumbBuilder;
 use Drupal\crumbs\lib\crumbs_CurrentPageInfo;
 use Drupal\crumbs\lib\crumbs_ParentFinder;
 use Drupal\crumbs\lib\crumbs_Router;
 use Drupal\crumbs\lib\crumbs_TrailCache;
 use Drupal\crumbs\lib\crumbs_TrailFinder;
+use Drupal\crumbs\lib\PluginSystem\crumbs_PluginSystem_PluginBag;
+use Drupal\crumbs\lib\PluginSystem\crumbs_PluginSystem_PluginEngine;
 use Drupal\crumbs\lib\PluginSystem\crumbs_PluginSystem_PluginInfo;
 
 /**
@@ -28,6 +28,12 @@ use Drupal\crumbs\lib\PluginSystem\crumbs_PluginSystem_PluginInfo;
  * @property crumbs_Router $router
  */
 class crumbs_DIC_ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
+
+//  protected $crumbs_PluginSystem_PluginInfo;
+//
+//  function __construct(\Drupal\crumbs\lib\PluginSystem\crumbs_PluginSystem_PluginInfo $crumbs_PluginSystem_PluginInfo) {
+//    $this->crumbs_PluginSystem_PluginInfo = $crumbs_PluginSystem_PluginInfo;
+//  }
 
   /**
    * A service that can build a breadcrumb from a trail.
@@ -69,6 +75,8 @@ class crumbs_DIC_ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
    */
   protected function pluginBag() {
     $pluginInfo = $this->pluginInfo;
+//    print '<pre>'; print_r("plugin bag - plugin info"); print '</pre>';
+//    print '<pre>'; print_r($pluginInfo); print '</pre>';
     return new crumbs_PluginSystem_PluginBag(
       $pluginInfo->plugins,
       $pluginInfo->routelessPluginMethods,
@@ -107,7 +115,9 @@ class crumbs_DIC_ServiceContainer extends crumbs_DIC_AbstractServiceContainer {
    * @see crumbs_DIC_ServiceContainer::$pluginInfo
    */
   public function pluginInfo() {
-    return new crumbs_PluginSystem_PluginInfo();
+//    return new crumbs_PluginSystem_PluginInfo();
+//    return $this->crumbs_PluginSystem_PluginInfo;
+    return \Drupal::service('crumbs.plugin_system.plugin_info');
   }
 
   /**

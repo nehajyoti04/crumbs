@@ -1,5 +1,9 @@
 <?php
 
+namespace Drupal\crumbs\lib\PluginSystem;
+
+use Drupal\crumbs\lib\crumbs_PluginInterface;
+use Iterator;
 
 class crumbs_PluginSystem_PluginMethodIterator implements Iterator {
 

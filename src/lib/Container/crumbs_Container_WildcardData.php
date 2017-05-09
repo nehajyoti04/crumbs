@@ -89,8 +89,15 @@ class crumbs_Container_WildcardData {
    * @return mixed
    *   The value for this key.
    */
-  function valueAtKey($key) {
+  public function valueAtKey($key) {
+    print '<pre>'; print_r("valueAtKey - data"); print '</pre>';
+    print '<pre>'; print_r($this->data[$key]); print '</pre>';
     if (isset($this->data[$key])) {
+      print '<pre>'; print_r("wildcard DATA"); print '</pre>';
+      print '<pre>'; print_r($this->data); print '</pre>';
+      print '<pre>'; print_r("valueAtKey - key"); print '</pre>';
+      print '<pre>'; print_r($key); print '</pre>';
+
       // Look for explicit setting.
       return $this->data[$key];
     }

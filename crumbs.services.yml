@@ -1,15 +1,4 @@
 services:
-  crumbs.injected_api.collection.default_value_collection:
-    class: Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_DefaultValueCollection
-
-  crumbs_service_container:
-    class: Drupal\crumbs\lib\DIC\crumbs_DIC_ServiceContainer
-
-  plugin.manager.crumbs:
-    class: Drupal\crumbs\crumbsPluginManager
-    parent: default_plugin_manager
-#    arguments: ['@crumbs.injected_api.collection.default_value_collection']
-
   crumbs.injected_api.collection.callback_collection:
     class: Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_CallbackCollection
 
@@ -21,6 +10,61 @@ services:
 
   crumbs.plugin_system.plugin_info:
     class: Drupal\crumbs\lib\PluginSystem\crumbs_PluginSystem_PluginInfo
+#    argument: ['@crumbs.injected_api.collection.collection_result']
+
+  crumbs.injected_api.collection.collection_result:
+    class: Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_CollectionResult
+    arguments: ['@crumbs.injected_api.collection.plugin_collection', '@crumbs.injected_api.collection.default_value_collection']
+
+  crumbs.injected_api.collection.default_value_collection:
+    class: Drupal\crumbs\lib\InjectedAPI\Collection\crumbs_InjectedAPI_Collection_DefaultValueCollection
+
+  crumbs_service_container:
+    class: Drupal\crumbs\lib\DIC\crumbs_DIC_ServiceContainer
+#    argument: ['@crumbs.plugin_system.plugin_info']
+
+  plugin.manager.crumbs:
+    class: Drupal\crumbs\crumbsPluginManager
+    parent: default_plugin_manager
+#    arguments: ['@crumbs.injected_api.collection.default_value_collection']
+
+
 
   crumbs.plugin.menu_plugin:
     class: Drupal\crumbs\Plugin\Crumbs\menuPlugin
+
+  crumbs.current_page_info:
+    class: Drupal\crumbs\lib\crumbs_CurrentPageInfo
+    arguments: ['@crumbs.trail_cache', '@crumbs.breadcrumb_builder', '@crumbs.router']
+
+  crumbs.trail_cache:
+    class: Drupal\crumbs\lib\crumbs_TrailCache
+    arguments: ['@crumbs.trail_finder']
+
+  crumbs.trail_finder:
+    class: Drupal\crumbs\lib\crumbs_TrailFinder
+    arguments: ['@crumbs.parent_finder', '@crumbs.router']
+
+  crumbs.router:
+    class: Drupal\crumbs\lib\crumbs_Router
+
+  crumbs.parent_finder:
+    class: Drupal\crumbs\lib\crumbs_ParentFinder
+    arguments: ['@crumbs.plugin_system.plugin_engine', '@crumbs.router']
+
+  crumbs.breadcrumb_builder:
+    class: Drupal\crumbs\lib\crumbs_BreadcrumbBuilder
+    arguments: ['@crumbs.plugin_system.plugin_engine']
+
+  crumbs.plugin_system.plugin_engine:
+    class: Drupal\crumbs\lib\PluginSystem\crumbs_PluginSystem_PluginEngine
+    arguments: ['@crumbs.plugin_system.plugin_bag', '@crumbs.router', '@crumbs.plugin_system.plugin_info']
+
+  crumbs.plugin_system.plugin_bag:
+    class: Drupal\crumbs\lib\PluginSystem\crumbs_PluginSystem_PluginBag
+    arguments: ['@crumbs.plugin_system.plugin_info']
+
+  crumbs.container.wildcard_data:
+    class: Drupal\crumbs\lib\Container\crumbs_Container_WildcardData
+
+

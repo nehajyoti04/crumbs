@@ -1,7 +1,7 @@
 <?php
 namespace Drupal\crumbs\lib;
 
-use crumbs_PluginSystem_PluginEngine;
+use Drupal\crumbs\lib\PluginSystem\crumbs_PluginSystem_PluginEngine;
 
 class crumbs_BreadcrumbBuilder {
 
@@ -13,7 +13,7 @@ class crumbs_BreadcrumbBuilder {
   /**
    * @param crumbs_PluginSystem_PluginEngine $pluginEngine
    */
-  function __construct($pluginEngine) {
+  function __construct(crumbs_PluginSystem_PluginEngine $pluginEngine) {
     $this->pluginEngine = $pluginEngine;
   }
 
@@ -29,6 +29,8 @@ class crumbs_BreadcrumbBuilder {
     foreach ($trail as $path => $item) {
       if ($item) {
         $title = $this->pluginEngine->findTitle($path, $item, $breadcrumb);
+//        print '<pre>'; print_r("buildBreadcrumb - findTitle"); print '</pre>';
+//        print '<pre>'; print_r($title); print '</pre>';
         if (!isset($title)) {
           $title = $item['title'];
         }

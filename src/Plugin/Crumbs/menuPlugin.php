@@ -3,9 +3,27 @@
 namespace Drupal\crumbs\Plugin\Crumbs;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\crumbs\Annotation\CrumbsAnnotation;
 use Drupal\crumbs\crumbsPluginBase;
 
+///**
+// * Displays an image as a tip.
+// *
+// * @CrumbsAnnotation(
+// *   id = "menu",
+// *   title = @Translation("Menu"),
+// *   name = @Translation("Chocolate"),
+// *   price = 1.75,
+// *   multipluginKey = "hierarchy",
+// *   module = "menu",
+// *   disabled_by_default_key = "*",
+// *   monoplugin_key = "home_title",
+//*    deriver = "Drupal\crumbs\Plugin\Derivative\menuPlugin"
+// * )
+// */
+
+//deriver = "Drupal\crumbs\Plugin\Derivative\menuPlugin"
 /**
  * Displays an image as a tip.
  *
@@ -20,7 +38,8 @@ use Drupal\crumbs\crumbsPluginBase;
  *   monoplugin_key = "home_title",
  * )
  */
-class menuPlugin extends crumbsPluginBase {
+class menuPlugin extends crumbsPluginBase implements ContainerFactoryPluginInterface {
+
 
   /**
    * The url which is used for the image in this Tip.
@@ -42,6 +61,10 @@ class menuPlugin extends crumbsPluginBase {
    * {@inheritdoc}
    */
   public function getOutput() {
+
+//    $block_id = $this->getDerivativeId();
+//    print '<pre>'; print_r("derivative"); print '</pre>';
+//    print '<pre>'; print_r($block_id); print '</pre>';
 //    print '<pre>'; print_r("default value collection"); print '</pre>';
 //    print '<pre>'; print_r($this->defaultValueCollection); print '</pre>';
 //    $this->defaultValueCollection
